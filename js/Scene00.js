@@ -7,5 +7,7 @@ class Scene00 extends Phaser.Scene {
         this.add.text(20, 20, "Loading Game...");
 
         this.scene.start("playGame");
+
+                
     }
 }
