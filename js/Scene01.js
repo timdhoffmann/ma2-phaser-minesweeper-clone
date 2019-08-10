@@ -12,7 +12,7 @@ class Scene01 extends Phaser.Scene {
 
         this.flag = this.add.image(0, 0, "flag");
         this.flag.setScale(0.5);
-        this.flag.setPosition(this.game.config.width / 2, this.game.config.height / 2);
+        this.flag.setPosition(config.width / 2, this.game.config.height / 2);
 
     }
 }
