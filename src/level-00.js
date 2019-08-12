@@ -2,25 +2,38 @@ import { Scene } from 'phaser'
 import { game } from './index'
 
 class Level00 extends Scene {
+  constructor () {
+    super('Level00')
+  }
+
   preload () {
-    //   this.load.image("logo", logoImg);
+    const cellSize = 60
+    this.load.image('flag', 'src/assets/flag.png')
+    this.load.spritesheet('cells', 'src/assets/playfield/cells.png', {
+      frameWidth: cellSize,
+      frameHeight: cellSize
+    })
   }
 
   create () {
-    const message = this.add.text(
-      game.config.width / 2.5,
-      100,
-      'Phaser is running!'
-    )
+    this.add.text(20, 20, 'Playing Game...', { font: '25px', fill: 'green' })
 
-    this.tweens.add({
-      targets: message,
-      y: 450,
-      duration: 2000,
-      ease: 'Power2',
-      yoyo: true,
-      loop: -1
-    })
+    this.flag = this.add.image(0, 0, 'flag')
+    this.flag.setScale(0.5)
+    this.flag.setPosition(game.config.width / 2, game.config.height / 2)
+
+    // Cells.
+    const cell = this.add.sprite(60, 60, 'cells', 0)
+    cell.setInteractive()
+
+    // Input events.
+    this.input.on('gameobjectup', this.cellClicked, this)
+  }
+
+  update () {}
+
+  cellClicked (pointer, gameObject) {
+    gameObject.setFrame(9)
   }
 }
 

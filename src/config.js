@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import LoadingGame from './loading-game'
 import Level00 from './level-00'
 
 const config = {
@@ -6,7 +7,8 @@ const config = {
   parent: 'phaser-example',
   width: 800,
   height: 600,
-  scene: Level00
+  backgroundColor: 0x222222,
+  scene: [LoadingGame, Level00]
 }
 
 export { config }
