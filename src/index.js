@@ -1,12 +1,4 @@
-import Phaser from 'phaser'
-import Level00 from './level-00'
+import { Game } from 'phaser'
+import { config } from './config'
 
-const config = {
-  type: Phaser.AUTO,
-  parent: 'phaser-example',
-  width: 800,
-  height: 600,
-  scene: Level00
-}
-
-const game = new Phaser.Game(config)
+const game = new Game(config)
