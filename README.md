@@ -2,6 +2,8 @@
 
 By Tim Hoffmann
 
+[**Live Demo**](https://timdhoffmann.github.io/ma2-phaser-minesweeper-distribution/)
+
 ## 1.1. Environment Requirements
 
 ### 1.1.1. Repository
