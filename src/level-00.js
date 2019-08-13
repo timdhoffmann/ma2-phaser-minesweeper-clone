@@ -66,6 +66,15 @@ class Level00 extends Scene {
         const cell = this.add.sprite(x + offsetX, y + offsetY, 'cells', 0)
         cell.setInteractive()
 
+        // Tints the cell for a hover effect.
+        cell.on('pointerover', event => {
+          cell.setTint(0xeeeeee)
+        })
+
+        cell.on('pointerout', event => {
+          cell.clearTint()
+        })
+
         offsetX += this.cellSize + gap
       }
 
