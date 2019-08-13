@@ -10,6 +10,8 @@ class Level00 extends Scene {
 
     this.cellSize = 60
     this.gridMatrixCount = 8
+    this.score = 0
+    this.timer = 0
   }
 
   preload () {
@@ -34,7 +36,15 @@ class Level00 extends Scene {
   }
 
   createTexts () {
-    this.add.text(20, 20, 'Playing Game...', { font: '25px', fill: 'green' })
+    this.scoreText = this.add.text(20, 20, `Score: ${this.score}`, {
+      font: '25px',
+      fill: 'white'
+    })
+
+    this.timerText = this.add.text(20, 45, `Time: ${this.timer}`, {
+      font: '25px',
+      fill: 'white'
+    })
 
     this.infoText = this.add.text(
       game.config.width / 2,
