@@ -5,6 +5,8 @@ import flagImg from './assets/flag.png'
 class LoadingGame extends Scene {
   constructor () {
     super({ key: 'loadingGame' })
+
+    this.flagAnimationDuration = 0
   }
 
   preload () {
@@ -49,7 +51,7 @@ class LoadingGame extends Scene {
       targets: this.flag,
       scale: 20,
       ease: 'in',
-      duration: 5000,
+      duration: this.flagAnimationDuration,
       onComplete: () => {
         this.fadeOutAndLoadLevel()
       }
