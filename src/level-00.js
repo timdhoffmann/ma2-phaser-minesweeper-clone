@@ -25,6 +25,8 @@ class Level00 extends Scene {
   // #region Create.
 
   create () {
+    this.createTimeEvents()
+
     this.createFlag()
 
     this.createCells(60, 120, this.gridMatrixCount, this.gridMatrixCount)
@@ -33,6 +35,19 @@ class Level00 extends Scene {
 
     // Input events.
     this.input.on('gameobjectup', this.cellClicked, this)
+  }
+
+  createTimeEvents () {
+    // Event to update the clock every "delay" milliseconds.
+    // Used to reduce expensive setText() calls.
+    // Important: Because it's managed by a Clock, a Timer Event is based on game time,
+    // will be affected by its Clock's time scale, and will pause if its Clock pauses.
+    this.time.addEvent({
+      delay: 1000,
+      loop: true,
+      callback: this.onUpdateTimer,
+      callbackScope: this
+    })
   }
 
   createTexts () {
@@ -102,6 +117,26 @@ class Level00 extends Scene {
     this.input.on('pointerup', () => this.scene.start('level00'))
   }
   // #endregion
+
+  update () {
+    // this.updateTimer();
+  }
+
+  onUpdateTimer () {
+    const timeFormatted = this.millisToMinutesAndSeconds(this.time.now)
+    this.timerText.setText(`Time: ${timeFormatted}`)
+  }
+
+  // TODO: Mention source in readme.
+  // Source: https://stackoverflow.com/questions/21294302/converting-milliseconds-to-minutes-and-seconds-with-javascript
+  millisToMinutesAndSeconds (millis) {
+    const minutes = Math.floor(millis / 60000)
+    const seconds = ((millis % 60000) / 1000).toFixed(0)
+
+    return seconds === 60
+      ? minutes + 1 + ':00'
+      : minutes + ':' + (seconds < 10 ? '0' : '') + seconds
+  }
 }
 
 export default Level00
