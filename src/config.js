@@ -13,4 +13,4 @@ const config = {
   scene: [LoadingGame, Level00]
 }
 
-export { config }
+export default config

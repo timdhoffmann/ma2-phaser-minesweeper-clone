@@ -1,5 +1,5 @@
 import { Scene } from 'phaser'
-import { game } from './index'
+import game from './index'
 // Assets.
 import flagImg from './assets/flag.png'
 import cellsImg from './assets/playfield/cells.png'
@@ -87,6 +87,10 @@ class Level00 extends Scene {
     this.infoText.setVisible(true)
   }
 
+  handleGameOver () {
+    // TODO: trigger game over handling.
+    this.input.on('pointerup', () => this.scene.start('level00'))
+  }
   // #endregion
 }
 
