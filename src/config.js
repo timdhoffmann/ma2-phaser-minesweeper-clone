@@ -9,6 +9,7 @@ const config = {
   width: 800,
   height: 600,
   backgroundColor: 0x222222,
+  // Loads the first scene in the array first.
   scene: [LoadingGame, Level00]
 }
 
