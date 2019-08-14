@@ -1,15 +1,20 @@
 import { Scene } from 'phaser'
 
-// TODO: workaround to get intellisense.
+const SpriteSheetIndex = Object.freeze({
+  Hidden: 0,
+  Marked: 9
+})
+
+// FIXME: workaround to get intellisense.
 // var is overwritten in constructor with actual reference.
 var _scene = new Scene()
 
 // Represents a single cell of the playfield.
 export default class Cell {
   constructor (scene, worldX, worldY, gridX, gridY) {
-    // IntelliSense workaround for development.
-    // this._scene = new Scene() // TODO: Comment for production!
-    // this._scene = scene // TODO: Un-Comment for production!
+    // FIXME: workaround to get intellisense.
+    // this._scene = new Scene() // FIXMEComment for production!
+    // this._scene = scene // Un-Comment for production!
     //
     // Alternative intelliSense workaround for development.
     // Intentionally re-assigns correct reference.
@@ -19,7 +24,7 @@ export default class Cell {
     this._isMarked = false
 
     this._sprite = _scene.add
-      .sprite(worldX, worldY, 'cells', 0)
+      .sprite(worldX, worldY, 'cells', SpriteSheetIndex.Hidden)
       .setInteractive()
       // Tints the cell for a hover effect.
       .on('pointerover', event => {
@@ -32,7 +37,7 @@ export default class Cell {
   }
 
   cellClicked (pointer, gameObject) {
-    this._sprite.setFrame(9)
+    this._sprite.setFrame(SpriteSheetIndex.Marked)
     _scene.infoText.setVisible(true)
   }
 }
