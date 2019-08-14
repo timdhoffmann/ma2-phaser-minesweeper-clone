@@ -1,5 +1,4 @@
 import { Scene } from 'phaser'
-import { game } from './index'
 // Assets.
 import flagImg from './assets/flag.png'
 import cellsImg from './assets/playfield/cells.png'
@@ -61,8 +60,8 @@ class Level00 extends Scene {
     })
 
     this.infoText = this.add.text(
-      game.config.width / 2,
-      game.config.height / 2 - 20,
+      this.game.config.width / 2,
+      this.game.config.height / 2 - 20,
       'Game Over!',
       { font: '50px', fill: 'red' }
     )
@@ -75,7 +74,7 @@ class Level00 extends Scene {
     flag.setScale(0.5)
     flag.setPosition(
       this._gridMatrixCount * this._cellSize + flag.displayWidth,
-      game.config.height / 2
+      this.game.config.height / 2
     )
   }
 
