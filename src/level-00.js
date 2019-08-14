@@ -1,9 +1,10 @@
 import { Scene } from 'phaser'
+import Cell from './cell'
 // Assets.
 import flagImg from './assets/flag.png'
 import cellsImg from './assets/playfield/cells.png'
 
-class Level00 extends Scene {
+export default class Level00 extends Scene {
   constructor () {
     super({ key: 'level00' })
 
@@ -30,9 +31,6 @@ class Level00 extends Scene {
     this.createCells(60, 120, this._gridMatrixCount, this._gridMatrixCount)
 
     this.createTexts()
-
-    // Input events.
-    this.input.on('gameobjectup', this.cellClicked, this)
   }
 
   createTimeEvents () {
@@ -82,21 +80,11 @@ class Level00 extends Scene {
     let offsetY = 0
     const gap = 1
 
-    for (let i = 0; i < rows; i++) {
+    for (let row = 0; row < rows; row++) {
       let offsetX = 0
 
-      for (let j = 0; j < columns; j++) {
-        const cell = this.add.sprite(x + offsetX, y + offsetY, 'cells', 0)
-        cell.setInteractive()
-
-        // Tints the cell for a hover effect.
-        cell.on('pointerover', event => {
-          cell.setTint(0xeeeeee)
-        })
-
-        cell.on('pointerout', event => {
-          cell.clearTint()
-        })
+      for (let column = 0; column < columns; column++) {
+        const cell = new Cell(this, x + offsetX, y + offsetY, row, column)
 
         offsetX += this._cellSize + gap
       }
@@ -105,20 +93,13 @@ class Level00 extends Scene {
     }
   }
 
-  cellClicked (pointer, gameObject) {
-    gameObject.setFrame(9)
-    this.infoText.setVisible(true)
-  }
-
   handleGameOver () {
     // TODO: trigger game over handling.
     this.input.on('pointerup', () => this.scene.start('level00'))
   }
   // #endregion
 
-  update () {
-    // this.updateTimer();
-  }
+  // #region Timer Methods
 
   onUpdateTimer () {
     const timeFormatted = this.millisToMinutesAndSeconds(this.time.now)
@@ -135,6 +116,6 @@ class Level00 extends Scene {
       ? minutes + 1 + ':00'
       : minutes + ':' + (seconds < 10 ? '0' : '') + seconds
   }
-}
 
-export default Level00
+  // #endregion
+}
