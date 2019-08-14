@@ -1,5 +1,5 @@
 import { Scene } from 'phaser'
-import game from './index'
+import { game } from './index'
 // Assets.
 import flagImg from './assets/flag.png'
 import cellsImg from './assets/playfield/cells.png'
@@ -8,17 +8,16 @@ class Level00 extends Scene {
   constructor () {
     super({ key: 'level00' })
 
-    this.cellSize = 60
-    this.gridMatrixCount = 8
-    this.score = 0
-    this.timer = 0
+    this._cellSize = 60
+    this._gridMatrixCount = 8
+    this._score = 0
   }
 
   preload () {
     this.load.image('flag', flagImg)
     this.load.spritesheet('cells', cellsImg, {
-      frameWidth: this.cellSize,
-      frameHeight: this.cellSize
+      frameWidth: this._cellSize,
+      frameHeight: this._cellSize
     })
   }
 
@@ -29,7 +28,7 @@ class Level00 extends Scene {
 
     this.createFlag()
 
-    this.createCells(60, 120, this.gridMatrixCount, this.gridMatrixCount)
+    this.createCells(60, 120, this._gridMatrixCount, this._gridMatrixCount)
 
     this.createTexts()
 
@@ -51,12 +50,12 @@ class Level00 extends Scene {
   }
 
   createTexts () {
-    this.scoreText = this.add.text(20, 20, `Score: ${this.score}`, {
+    this.scoreText = this.add.text(20, 20, `Score: ${this._score}`, {
       font: '25px',
       fill: 'white'
     })
 
-    this.timerText = this.add.text(20, 45, `Time: ${this.timer}`, {
+    this.timerText = this.add.text(20, 45, `Time:`, {
       font: '25px',
       fill: 'white'
     })
@@ -75,7 +74,7 @@ class Level00 extends Scene {
     const flag = this.add.image(0, 0, 'flag')
     flag.setScale(0.5)
     flag.setPosition(
-      this.gridMatrixCount * this.cellSize + flag.displayWidth,
+      this._gridMatrixCount * this._cellSize + flag.displayWidth,
       game.config.height / 2
     )
   }
@@ -100,10 +99,10 @@ class Level00 extends Scene {
           cell.clearTint()
         })
 
-        offsetX += this.cellSize + gap
+        offsetX += this._cellSize + gap
       }
 
-      offsetY += this.cellSize + gap
+      offsetY += this._cellSize + gap
     }
   }
 

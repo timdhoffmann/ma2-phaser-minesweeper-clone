@@ -1,6 +1,4 @@
 import { Game } from 'phaser'
-import config from './config'
+import { config } from './config'
 
-const game = new Game(config)
-
-export default game
+export const game = new Game(config)

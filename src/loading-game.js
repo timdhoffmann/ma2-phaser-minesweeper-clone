@@ -6,6 +6,7 @@ class LoadingGame extends Scene {
   constructor () {
     super({ key: 'loadingGame' })
 
+    // TODO: only used for dev. Remove.
     this.flagAnimationDuration = 0
   }
 
