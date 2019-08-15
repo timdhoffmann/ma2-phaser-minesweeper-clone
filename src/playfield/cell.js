@@ -13,9 +13,12 @@ var _scene = new Scene()
 
 // Represents a single cell of the playfield.
 export default class Cell {
-  constructor (scene, worldX, worldY) {
+  constructor (scene, worldX, worldY, gridX, gridY) {
     // Public properties.
     this.isMine = false
+    this.surroundingMines = 0
+    this.gridX = gridX
+    this.gridY = gridY
 
     // "Private" properties.
 
@@ -46,15 +49,24 @@ export default class Cell {
 
   onCellClicked (pointer, gameObject) {
     if (this.isMine) {
+      // Cell is a mine.
+
       // TODO: replace tinting with correct sprite.
       this._sprite.setTint(0xff0000)
       this._sprite.removeInteractive()
       // this._sprite.disableInteractive()
       // this._sprite.setFrame(SpriteSheetIndex.Marked)
 
+      // Game over.
       _scene.handleGameOver()
     } else {
-      this._sprite.setFrame(SpriteSheetIndex.Revealed)
+      // Cell is not a mine.
+
+      if (this.surroundingMines > 0) {
+        this._sprite.setFrame(this.surroundingMines)
+      } else {
+        this._sprite.setFrame(SpriteSheetIndex.Revealed)
+      }
     }
     // TODO: Set sprite according to state.
     // if (this._isMarked) {
