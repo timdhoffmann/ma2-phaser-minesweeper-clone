@@ -44,10 +44,22 @@ export default class Cell {
       .on('pointerout', event => {
         this._sprite.clearTint()
       })
-      .on('pointerup', this.onCellClicked, this)
+      // TODO: Change to pointer up, if possible with right mouse?
+      .on('pointerdown', this.onCellClicked, this)
   }
 
   onCellClicked (pointer, gameObject) {
+    if (pointer.rightButtonDown()) {
+      console.log('right mouse button')
+      // if (pointer.getDuration() > 500)
+      // {
+      //     this.add.image(pointer.x, pointer.y, 'disk');
+      // }
+      // else
+      // {
+      //     this.add.image(pointer.x, pointer.y, 'asuna');
+      // }
+    }
     if (this.isMine) {
       // Cell is a mine.
 

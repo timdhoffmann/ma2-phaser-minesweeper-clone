@@ -33,6 +33,8 @@ export default class Level00 extends Scene {
     this.createGrid()
 
     this.createTexts()
+
+    this.input.mouse.disableContextMenu()
   }
 
   createTimeEvents () {
