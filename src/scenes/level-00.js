@@ -1,5 +1,6 @@
 import { Scene } from 'phaser'
-import Cell from '../playfield/cell'
+import Grid from '../playfield/grid'
+// import Cell from '../playfield/cell'
 // Assets.
 import flagImg from '../assets/flag.png'
 import cellsImg from '../assets/playfield/cells.png'
@@ -9,7 +10,7 @@ export default class Level00 extends Scene {
     super({ key: 'level00' })
 
     this._cellSize = 60
-    this._gridMatrixCount = 8
+    this._gridSize = 8
     this._score = 0
   }
 
@@ -28,7 +29,7 @@ export default class Level00 extends Scene {
 
     this.createFlag()
 
-    this.createCells(60, 120, this._gridMatrixCount, this._gridMatrixCount)
+    this.createGrid()
 
     this.createTexts()
   }
@@ -46,51 +47,45 @@ export default class Level00 extends Scene {
     })
   }
 
+  createGrid () {
+    this._grid = new Grid(
+      this,
+      40,
+      100,
+      this._gridSize,
+      this._gridSize,
+      this._cellSize
+    )
+  }
+
   createTexts () {
-    this.scoreText = this.add.text(20, 20, `Score: ${this._score}`, {
+    this._scoreText = this.add.text(20, 20, `Score: ${this._score}`, {
       font: '25px',
       fill: 'white'
     })
 
-    this.timerText = this.add.text(20, 45, `Time:`, {
+    this._timerText = this.add.text(20, 45, `Time:`, {
       font: '25px',
       fill: 'white'
     })
 
-    this.infoText = this.add.text(
+    this._infoText = this.add.text(
       this.game.config.width / 2,
       this.game.config.height / 2 - 20,
       'Game Over!',
       { font: '50px', fill: 'red' }
     )
-    this.infoText.setOrigin(0.5)
-    this.infoText.setVisible(false)
+    this._infoText.setOrigin(0.5)
+    this._infoText.setVisible(false)
   }
 
   createFlag () {
     const flag = this.add.image(0, 0, 'flag')
     flag.setScale(0.5)
     flag.setPosition(
-      this._gridMatrixCount * this._cellSize + flag.displayWidth,
+      this._gridSize * this._cellSize + flag.displayWidth,
       this.game.config.height / 2
     )
-  }
-
-  createCells (x, y, rows, columns) {
-    let offsetY = 0
-    const gap = 1
-
-    for (let row = 0; row < rows; row++) {
-      let offsetX = 0
-
-      for (let column = 0; column < columns; column++) {
-        const cell = new Cell(this, x + offsetX, y + offsetY, row, column)
-
-        offsetX += this._cellSize + gap
-      }
-
-      offsetY += this._cellSize + gap
-    }
   }
 
   handleGameOver () {
@@ -103,7 +98,7 @@ export default class Level00 extends Scene {
 
   onUpdateTimer () {
     const timeFormatted = this.millisToMinutesAndSeconds(this.time.now)
-    this.timerText.setText(`Time: ${timeFormatted}`)
+    this._timerText.setText(`Time: ${timeFormatted}`)
   }
 
   // TODO: Mention source in readme.

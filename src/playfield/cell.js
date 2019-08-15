@@ -11,7 +11,7 @@ var _scene = new Scene()
 
 // Represents a single cell of the playfield.
 export default class Cell {
-  constructor (scene, worldX, worldY, gridX, gridY) {
+  constructor (scene, worldX, worldY) {
     // FIXME: workaround to get intellisense.
     // this._scene = new Scene() // FIXMEComment for production!
     // this._scene = scene // Un-Comment for production!
@@ -25,6 +25,7 @@ export default class Cell {
 
     this._sprite = _scene.add
       .sprite(worldX, worldY, 'cells', SpriteSheetIndex.Hidden)
+      .setOrigin(0)
       .setInteractive()
       // Tints the cell for a hover effect.
       .on('pointerover', event => {
