@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
-import LoadingGame from './loading-game'
-import Level00 from './level-00'
+import LoadingGame from './scenes/loading-game'
+import Level00 from './scenes/level-00'
 
 // Configuration for the game. Not using physics.
 export const config = {

@@ -1,8 +1,8 @@
 import { Scene } from 'phaser'
-import Cell from './cell'
+import Cell from '../playfield/cell'
 // Assets.
-import flagImg from './assets/flag.png'
-import cellsImg from './assets/playfield/cells.png'
+import flagImg from '../assets/flag.png'
+import cellsImg from '../assets/playfield/cells.png'
 
 export default class Level00 extends Scene {
   constructor () {
