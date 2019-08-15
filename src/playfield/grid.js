@@ -1,6 +1,5 @@
 import Cell from './cell'
-import { Scene } from 'phaser'
-import { Math } from 'phaser'
+import { Scene, Math } from 'phaser'
 
 // Represents the grid of cells that makes the playfield.
 export default class Grid {
@@ -31,8 +30,6 @@ export default class Grid {
     this._cells = this.createGrid()
 
     this.distributeMines(totalMines)
-
-    this._cells[2][3]._sprite.setTint(0xff0000)
   }
 
   // Creats a grid of cells.
@@ -56,6 +53,7 @@ export default class Grid {
     return cells
   }
 
+  // Distributes mines across an existing cell grid.
   distributeMines (minesToPlace) {
     while (minesToPlace > 0) {
       const randomX = Math.RND.between(0, this._gridWidth - 1)
@@ -63,7 +61,9 @@ export default class Grid {
       const cell = this._cells[randomX][randomY]
 
       if (cell.isMine) {
-        console.log(`cell ${randomX}, ${randomY} already is mine. skipped.`)
+        console.log(
+          `cell x: ${randomX}, y: ${randomY} already is mine. skipped.`
+        )
         continue
       }
 
@@ -71,7 +71,7 @@ export default class Grid {
       cell.isMine = true
       minesToPlace--
       console.log(
-        `placed mine at ${randomX}, ${randomY}. remaining: ${minesToPlace}`
+        `placed mine at x: ${randomX}, y: ${randomY}. remaining: ${minesToPlace}`
       )
     }
   }

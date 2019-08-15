@@ -1,8 +1,10 @@
 import { Scene } from 'phaser'
 
+// Helper "enum" for spriteSheet indices.
 const SpriteSheetIndex = Object.freeze({
   Hidden: 0,
-  Marked: 9
+  Marked: 9,
+  Revealed: 10
 })
 
 // FIXME: workaround to get intellisense.
@@ -39,11 +41,24 @@ export default class Cell {
       .on('pointerout', event => {
         this._sprite.clearTint()
       })
-      .on('pointerup', this.cellClicked, this)
+      .on('pointerup', this.onCellClicked, this)
   }
 
-  cellClicked (pointer, gameObject) {
-    this._sprite.setFrame(SpriteSheetIndex.Marked)
-    _scene.infoText.setVisible(true)
+  onCellClicked (pointer, gameObject) {
+    if (this.isMine) {
+      // TODO: replace tinting with correct sprite.
+      this._sprite.setTint(0xff0000)
+      this._sprite.removeInteractive()
+      // this._sprite.disableInteractive()
+      // this._sprite.setFrame(SpriteSheetIndex.Marked)
+
+      _scene.handleGameOver()
+    } else {
+      this._sprite.setFrame(SpriteSheetIndex.Revealed)
+    }
+    // TODO: Set sprite according to state.
+    // if (this._isMarked) {
+    //   this._sprite.setFrame(SpriteSheetIndex.Marked)
+    // }
   }
 }

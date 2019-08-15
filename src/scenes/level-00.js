@@ -92,6 +92,10 @@ export default class Level00 extends Scene {
 
   handleGameOver () {
     // TODO: trigger game over handling.
+    console.log('game over')
+    this._infoText.setVisible(true)
+
+    // TODO: reset timer.
     this.input.on('pointerup', () => this.scene.start('level00'))
   }
   // #endregion
