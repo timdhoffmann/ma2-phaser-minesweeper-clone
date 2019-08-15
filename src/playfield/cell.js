@@ -12,6 +12,11 @@ var _scene = new Scene()
 // Represents a single cell of the playfield.
 export default class Cell {
   constructor (scene, worldX, worldY) {
+    // Public properties.
+    this.isMine = false
+
+    // "Private" properties.
+
     // FIXME: workaround to get intellisense.
     // this._scene = new Scene() // FIXMEComment for production!
     // this._scene = scene // Un-Comment for production!

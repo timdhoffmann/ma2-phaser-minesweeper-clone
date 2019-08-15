@@ -1,9 +1,18 @@
 import Cell from './cell'
 import { Scene } from 'phaser'
+import { Math } from 'phaser'
 
 // Represents the grid of cells that makes the playfield.
 export default class Grid {
-  constructor (scene, worldX, worldY, gridWidth, gridHeight, cellSize) {
+  constructor (
+    scene,
+    worldX,
+    worldY,
+    gridWidth,
+    gridHeight,
+    cellSize,
+    totalMines
+  ) {
     // A reference to the parent phaser scene.
     this._scene = scene
     // The world position of the grid in pixels.
@@ -20,6 +29,8 @@ export default class Grid {
     this._gap = 1
     // A 2d array off cells [gridX][gridY] or [gridWidth][gridHeight].
     this._cells = this.createGrid()
+
+    this.distributeMines(totalMines)
 
     this._cells[2][3]._sprite.setTint(0xff0000)
   }
@@ -45,6 +56,28 @@ export default class Grid {
     return cells
   }
 
+  distributeMines (minesToPlace) {
+    while (minesToPlace > 0) {
+      const randomX = Math.RND.between(0, this._gridWidth - 1)
+      const randomY = Math.RND.between(0, this._gridHeight - 1)
+      const cell = this._cells[randomX][randomY]
+
+      if (cell.isMine) {
+        console.log(`cell ${randomX}, ${randomY} already is mine. skipped.`)
+        continue
+      }
+
+      // Only executes if cell isn't a mine already.
+      cell.isMine = true
+      minesToPlace--
+      console.log(
+        `placed mine at ${randomX}, ${randomY}. remaining: ${minesToPlace}`
+      )
+    }
+  }
+
+  // #region Helper Methods
+
   getWorldX (gridX) {
     return this._worldX + this._cellSize * gridX + this._gap * gridX
   }
@@ -52,4 +85,6 @@ export default class Grid {
   getWorldY (gridY) {
     return this._worldY + this._cellSize * gridY + this._gap * gridY
   }
+
+  // #endregion
 }

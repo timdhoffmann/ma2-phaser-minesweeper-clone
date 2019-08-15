@@ -11,6 +11,7 @@ export default class Level00 extends Scene {
 
     this._cellSize = 60
     this._gridSize = 8
+    this._totalMines = 10
     this._score = 0
   }
 
@@ -54,7 +55,8 @@ export default class Level00 extends Scene {
       100,
       this._gridSize,
       this._gridSize,
-      this._cellSize
+      this._cellSize,
+      this._totalMines
     )
   }
 
