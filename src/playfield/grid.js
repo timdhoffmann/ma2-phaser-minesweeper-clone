@@ -22,21 +22,21 @@ export default class Grid {
   }
 
   // Creats a grid of cells.
-  // Returns a 2d array [gridX][gridY].
+  // Returns a 2d array of cells [gridX][gridY].
   createGrid () {
     const cells = []
     const gap = 1
     let offsetX = 0
 
-    // Creates one column of cells after the other.
-    for (let x = 0; x < this._gridHeight; x++) {
+    // Creates one column of cells after the other, from left to right.
+    for (let x = 0; x < this._gridWidth; x++) {
       // Adds a blank column of cells.
       cells.push([])
 
       let offsetY = 0
 
-      // Creates all cells in a column.
-      for (let y = 0; y < this._gridWidth; y++) {
+      // Creates all cells in a column, from top to bottom.
+      for (let y = 0; y < this._gridHeight; y++) {
         cells[x].push(
           new Cell(this._scene, this._worldX + offsetX, this._worldY + offsetY)
         )
