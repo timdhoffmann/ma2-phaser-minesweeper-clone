@@ -15,6 +15,9 @@ export default class Grid {
     this._gridHeight = gridHeight
     // Ths size of one cell in pixels.
     this._cellSize = cellSize
+
+    // Gap between cells in pixels.
+    this._gap = 1
     // A 2d array off cells [gridX][gridY] or [gridWidth][gridHeight].
     this._cells = this.createGrid()
 
@@ -25,28 +28,28 @@ export default class Grid {
   // Returns a 2d array of cells [gridX][gridY].
   createGrid () {
     const cells = []
-    const gap = 1
-    let offsetX = 0
 
     // Creates one column of cells after the other, from left to right.
     for (let x = 0; x < this._gridWidth; x++) {
       // Adds a blank column of cells.
       cells.push([])
 
-      let offsetY = 0
-
       // Creates all cells in a column, from top to bottom.
       for (let y = 0; y < this._gridHeight; y++) {
         cells[x].push(
-          new Cell(this._scene, this._worldX + offsetX, this._worldY + offsetY)
+          new Cell(this._scene, this.getWorldX(x), this.getWorldY(y))
         )
-
-        offsetY += this._cellSize + gap
       }
-
-      offsetX += this._cellSize + gap
     }
 
     return cells
+  }
+
+  getWorldX (gridX) {
+    return this._worldX + this._cellSize * gridX + this._gap * gridX
+  }
+
+  getWorldY (gridY) {
+    return this._worldY + this._cellSize * gridY + this._gap * gridY
   }
 }
