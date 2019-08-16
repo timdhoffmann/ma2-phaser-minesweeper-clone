@@ -1,18 +1,21 @@
-import { Scene } from 'phaser'
+import Phaser from 'phaser'
 import Grid from '../playfield/grid'
 // import Cell from '../playfield/cell'
 // Assets.
 import flagImg from '../assets/flag.png'
 import cellsImg from '../assets/playfield/cells.png'
 
-export default class Level00 extends Scene {
+export default class Level00 extends Phaser.Scene {
   constructor () {
     super({ key: 'level00' })
 
+    // "Public" properties.
+
+    // "Private" properties.
     this._cellSize = 60
     this._gridSize = 8
     this._totalMines = 10
-    this._score = 0
+    this._mineCounter = this._totalMines
   }
 
   preload () {
@@ -63,10 +66,15 @@ export default class Level00 extends Scene {
   }
 
   createTexts () {
-    this._scoreText = this.add.text(20, 20, `Score: ${this._score}`, {
-      font: '25px',
-      fill: 'white'
-    })
+    this._mineCounterText = this.add.text(
+      20,
+      20,
+      `Mines: ${this._mineCounter}`,
+      {
+        font: '25px',
+        fill: 'white'
+      }
+    )
 
     this._timerText = this.add.text(20, 45, `Time:`, {
       font: '25px',
@@ -92,6 +100,35 @@ export default class Level00 extends Scene {
     )
   }
 
+  // #endregion
+
+  // #region Mine Counter Methods
+
+  setMineMarked () {
+    this.updateMineCounter(-1)
+  }
+
+  setMineUnmarked () {
+    this.updateMineCounter(+1)
+  }
+
+  // Updates the _mineCounter.
+  updateMineCounter (amount) {
+    // Microsoft Minesweeper allows negative _mineCounter.
+    this._mineCounter += amount
+
+    // This would clamp to 0 and total mines.
+    // this._mineCounter = Phaser.Math.Clamp(
+    //   (this._mineCounter += amount),
+    //   0,
+    //   this._totalMines
+    // )
+
+    this._mineCounterText.text = `Mines: ${this._mineCounter}`
+  }
+
+  // #endregion
+
   handleGameOver () {
     // TODO: trigger game over handling.
     console.log('game over')
@@ -100,7 +137,6 @@ export default class Level00 extends Scene {
     // TODO: reset timer.
     this.input.on('pointerup', () => this.scene.start('level00'))
   }
-  // #endregion
 
   // #region Timer Methods
 
@@ -112,7 +148,7 @@ export default class Level00 extends Scene {
   // TODO: Mention source in readme.
   // Source: https://stackoverflow.com/questions/21294302/converting-milliseconds-to-minutes-and-seconds-with-javascript
   millisToMinutesAndSeconds (millis) {
-    const minutes = Math.floor(millis / 60000)
+    const minutes = Phaser.Math.FloorTo(millis / 60000)
     const seconds = ((millis % 60000) / 1000).toFixed(0)
 
     return seconds === 60

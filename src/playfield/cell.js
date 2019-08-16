@@ -54,9 +54,11 @@ export default class Cell {
       if (!this._isMarked) {
         this._sprite.setFrame(SpriteSheetIndex.Marked)
         this._isMarked = true
+        _scene.setMineMarked()
       } else {
         this._sprite.setFrame(SpriteSheetIndex.Hidden)
         this._isMarked = false
+        _scene.setMineUnmarked()
       }
 
       return
