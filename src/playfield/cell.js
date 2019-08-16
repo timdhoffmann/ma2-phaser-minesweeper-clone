@@ -50,16 +50,18 @@ export default class Cell {
 
   onCellClicked (pointer, gameObject) {
     if (pointer.rightButtonDown()) {
-      console.log('right mouse button')
-      // if (pointer.getDuration() > 500)
-      // {
-      //     this.add.image(pointer.x, pointer.y, 'disk');
-      // }
-      // else
-      // {
-      //     this.add.image(pointer.x, pointer.y, 'asuna');
-      // }
+      // Marks mines with right click.
+      if (!this._isMarked) {
+        this._sprite.setFrame(SpriteSheetIndex.Marked)
+        this._isMarked = true
+      } else {
+        this._sprite.setFrame(SpriteSheetIndex.Hidden)
+        this._isMarked = false
+      }
+
+      return
     }
+
     if (this.isMine) {
       // Cell is a mine.
 
@@ -81,8 +83,6 @@ export default class Cell {
       }
     }
     // TODO: Set sprite according to state.
-    // if (this._isMarked) {
-    //   this._sprite.setFrame(SpriteSheetIndex.Marked)
-    // }
+    //
   }
 }
