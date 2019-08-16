@@ -49,40 +49,63 @@ export default class Cell {
   }
 
   onCellClicked (pointer, gameObject) {
+    // Right mouse button pressed.
     if (pointer.rightButtonDown()) {
-      // Marks mines with right click.
-      if (!this._isMarked) {
-        this._sprite.setFrame(SpriteSheetIndex.Marked)
-        this._isMarked = true
-        _scene.setMineMarked()
-      } else {
-        this._sprite.setFrame(SpriteSheetIndex.Hidden)
-        this._isMarked = false
-        _scene.setMineUnmarked()
-      }
-
+      this.handleRightMouseButton()
       return
     }
 
+    // Left mouse button pressed.
+
+    this.handleLeftMouseButton()
+  }
+
+  // Marks cells as mines with right click.
+  handleRightMouseButton () {
+    if (!this._isMarked) {
+      this._sprite.setFrame(SpriteSheetIndex.Marked)
+      this._isMarked = true
+      _scene.setMineMarked()
+    } else {
+      this._sprite.setFrame(SpriteSheetIndex.Hidden)
+      this._isMarked = false
+      _scene.setMineUnmarked()
+    }
+  }
+
+  handleLeftMouseButton () {
     if (this.isMine) {
       // Cell is a mine.
-
       // TODO: replace tinting with correct sprite.
       this._sprite.setTint(0xff0000)
       this._sprite.removeInteractive()
       // this._sprite.disableInteractive()
       // this._sprite.setFrame(SpriteSheetIndex.Marked)
-
       // Game over.
       _scene.handleGameOver()
     } else {
       // Cell is not a mine.
 
-      if (this.surroundingMines > 0) {
-        this._sprite.setFrame(this.surroundingMines)
-      } else {
-        this._sprite.setFrame(SpriteSheetIndex.Revealed)
-      }
+      this.reveal()
+    }
+  }
+
+  // Reveals a cell that hasn't been revealed, yet.
+  reveal () {
+    // Prevents already revealed cells from revealing again.
+    if (this._isRevealed) {
+      return
+    }
+
+    this._isRevealed = true
+
+    // Cell has surrounding mines.
+    if (this.surroundingMines > 0) {
+      this._sprite.setFrame(this.surroundingMines)
+    } else {
+      // No surrounding mines.
+      this._sprite.setFrame(SpriteSheetIndex.Revealed)
+      _scene.grid.autoRevealSurroundingCells(this)
     }
     // TODO: Set sprite according to state.
     //

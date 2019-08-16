@@ -10,6 +10,7 @@ export default class Level00 extends Phaser.Scene {
     super({ key: 'level00' })
 
     // "Public" properties.
+    this.grid = null
 
     // "Private" properties.
     this._cellSize = 60
@@ -54,7 +55,7 @@ export default class Level00 extends Phaser.Scene {
   }
 
   createGrid () {
-    this._grid = new Grid(
+    this.grid = new Grid(
       this,
       40,
       100,

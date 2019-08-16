@@ -123,6 +123,29 @@ export default class Grid {
 
   // #endregion
 
+  autoRevealSurroundingCells (cell) {
+    // Iterates over all surrounding cells.
+    for (let x = -1; x < 2; x++) {
+      for (let y = -1; y < 2; y++) {
+        // TODO: needs skipping checking itself?
+        if (x === 0 && y === 0) {
+          continue
+        }
+
+        const surroundingCell = this.getCell(cell.gridX + x, cell.gridY + y)
+
+        // Prevents accessing invalid cells outside the grid.
+        if (surroundingCell === null) {
+          continue
+        }
+
+        if (surroundingCell.surroundingMines === 0) {
+          surroundingCell.reveal()
+        }
+      }
+    }
+  }
+
   // #region Helper Methods
 
   // Gets the cell at the requested location.
