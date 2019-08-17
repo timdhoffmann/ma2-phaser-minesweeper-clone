@@ -31,7 +31,7 @@ export default class Grid {
     
     // Debugging.
     // Set to true, if mines should be indicated upon grid creation.
-    this._debugShowMines = true
+    this._debugShowMines = false
 
     // A 2d array off cells [gridX][gridY] or [gridWidth][gridHeight].
     this._cells = this.createGrid()
