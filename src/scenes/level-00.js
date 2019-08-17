@@ -11,12 +11,14 @@ export default class Level00 extends Phaser.Scene {
 
     // "Public" properties.
     this.grid = null
+    this.hasStartedGame = false
 
     // "Private" properties.
     this._cellSize = 60
     this._gridSize = 8
     this._totalMines = 10
     this._mineCounter = this._totalMines
+    this._timeAtStartedGame = 0
   }
 
   preload () {
@@ -46,11 +48,12 @@ export default class Level00 extends Phaser.Scene {
     // Used to reduce expensive setText() calls.
     // Important: Because it's managed by a Clock, a Timer Event is based on game time,
     // will be affected by its Clock's time scale, and will pause if its Clock pauses.
-    this.time.addEvent({
+    this._updateTimerTextEvent = this.time.addEvent({
       delay: 1000,
       loop: true,
-      callback: this.onUpdateTimer,
-      callbackScope: this
+      callback: this.onUpdateTimerText,
+      callbackScope: this,
+      paused: true
     })
   }
 
@@ -77,7 +80,7 @@ export default class Level00 extends Phaser.Scene {
       }
     )
 
-    this._timerText = this.add.text(20, 45, `Time:`, {
+    this._timerText = this.add.text(20, 45, `Time: 0:00`, {
       font: '25px',
       fill: 'white'
     })
@@ -130,6 +133,17 @@ export default class Level00 extends Phaser.Scene {
 
   // #endregion
 
+  // #region Game Flow Methods
+
+  startGame () {
+    if (!this.hasStartedGame) {
+      // this.time.update(0)
+      this._timeAtStartedGame = this.time.now
+      this._updateTimerTextEvent.paused = false
+      this.hasStartedGame = true
+    }
+  }
+
   handleGameOver () {
     // TODO: trigger game over handling.
     console.log('game over')
@@ -139,15 +153,19 @@ export default class Level00 extends Phaser.Scene {
     this.input.on('pointerup', () => this.scene.start('level00'))
   }
 
+  // #endregion
+
   // #region Timer Methods
 
-  onUpdateTimer () {
-    const timeFormatted = this.millisToMinutesAndSeconds(this.time.now)
+  onUpdateTimerText () {
+    const timeFormatted = this.millisToMinutesAndSeconds(
+      this.time.now - this._timeAtStartedGame
+    )
     this._timerText.setText(`Time: ${timeFormatted}`)
   }
 
   // TODO: Mention source in readme.
-  // Source: https://stackoverflow.com/questions/21294302/converting-milliseconds-to-minutes-and-seconds-with-javascript
+  // Adapted from: https://stackoverflow.com/questions/21294302/converting-milliseconds-to-minutes-and-seconds-with-javascript
   millisToMinutesAndSeconds (millis) {
     const minutes = Phaser.Math.FloorTo(millis / 60000)
     const seconds = ((millis % 60000) / 1000).toFixed(0)

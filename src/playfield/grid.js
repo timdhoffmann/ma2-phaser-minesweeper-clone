@@ -12,6 +12,9 @@ export default class Grid {
     cellSize,
     totalMines
   ) {
+    // Shows all mines for debugging.
+    this._debugShowMines = true
+
     // A reference to the parent phaser scene.
     this._scene = scene
     // The world position of the grid in pixels.
@@ -60,19 +63,17 @@ export default class Grid {
       const randomY = Math.RND.between(0, this._gridHeight - 1)
       const cell = this._cells[randomX][randomY]
 
+      // Skips a cell that already contains a mine.
       if (cell.isMine) {
-        console.log(
-          `cell x: ${randomX}, y: ${randomY} already is mine. skipped.`
-        )
         continue
       }
 
       // Only executes if cell isn't a mine already.
       cell.isMine = true
       minesToPlace--
-      console.log(
-        `placed mine at x: ${randomX}, y: ${randomY}. remaining: ${minesToPlace}`
-      )
+      if (this._debugShowMines) {
+        cell.showIfMine()
+      }
     }
 
     this.calculateAllCellsSurroundingMines()

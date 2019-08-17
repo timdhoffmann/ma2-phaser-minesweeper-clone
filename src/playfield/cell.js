@@ -49,6 +49,10 @@ export default class Cell {
   }
 
   onCellClicked (pointer, gameObject) {
+    if (!_scene.hasStartedGame) {
+      _scene.startGame()
+    }
+
     // Right mouse button pressed.
     if (pointer.rightButtonDown()) {
       this.handleRightMouseButton()
@@ -109,5 +113,11 @@ export default class Cell {
     }
     // TODO: Set sprite according to state.
     //
+  }
+
+  showIfMine() {
+    if (this.isMine) {
+      this._sprite.setTint(0xdd0000)
+    }
   }
 }
