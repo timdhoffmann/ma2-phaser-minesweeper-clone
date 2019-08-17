@@ -1,11 +1,12 @@
 import { Scene } from 'phaser'
 // Assets.
-import flagImg from './assets/flag.png'
+import flagImg from '../assets/flag.png'
 
 class LoadingGame extends Scene {
   constructor () {
     super({ key: 'loadingGame' })
 
+    // TODO: only used for dev. Remove.
     this.flagAnimationDuration = 0
   }
 

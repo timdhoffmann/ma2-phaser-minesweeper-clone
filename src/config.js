@@ -1,9 +1,9 @@
 import Phaser from 'phaser'
-import LoadingGame from './loading-game'
-import Level00 from './level-00'
+import LoadingGame from './scenes/loading-game'
+import Level00 from './scenes/level-00'
 
 // Configuration for the game. Not using physics.
-const config = {
+export const config = {
   type: Phaser.AUTO,
   parent: 'phaser-example',
   width: 800,
@@ -12,5 +12,3 @@ const config = {
   // Loads the first scene in the array first.
   scene: [LoadingGame, Level00]
 }
-
-export { config }
