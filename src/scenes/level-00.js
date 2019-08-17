@@ -90,11 +90,13 @@ export default class Level00 extends Phaser.Scene {
     this._infoText = this.add.text(
       this.game.config.width / 2,
       this.game.config.height / 2 - 20,
-      'Game Over!',
+      'Game Over!\n Click to restart.',
       { font: '50px', fill: 'red' }
     )
-    this._infoText.setOrigin(0.5)
-    this._infoText.setVisible(false)
+      .setAlign('center')
+      .setOrigin(0.5)
+      .setVisible(false)
+      .setDepth(100)
   }
 
   createFlag () {
@@ -107,20 +109,38 @@ export default class Level00 extends Phaser.Scene {
   }
 
   createMenu () {
-    this._menuOverlay = this.add.rectangle(
-      0,
-      0,
-      this.game.config.width,
-      this.game.config.height,
-      0xffffff,
-      0.4
-    )
+    this._menuOverlay = this.add
+      .rectangle(
+        0,
+        0,
+        this.game.config.width,
+        this.game.config.height,
+        0xffffff,
+        0.4
+      )
       .setOrigin(0)
       .setInteractive()
       .setVisible(false)
+      .on('pointerdown', this.onRestartGame, this)
   }
 
   // #endregion
+
+  // Initializes the game state.
+  initGame () {
+    this.hasStartedGame = false
+    
+    this._infoText.setVisible(false)
+    this._menuOverlay.setActive(false).setVisible(false)
+
+    this._mineCounter = this._totalMines
+    this._mineCounterText.text = `Mines: ${this._mineCounter}`
+
+    this._timerText.text = 'Time: 0:00'
+    this._updateTimerTextEvent.paused = true
+
+    this.grid.init()
+  }
 
   // #region Mine Counter Methods
 
@@ -163,13 +183,22 @@ export default class Level00 extends Phaser.Scene {
   handleGameOver () {
     // TODO: trigger game over handling.
     console.log('game over')
-    this.grid.showMines()
-    this._infoText.setVisible(true)
+    this.grid.showAllMines()
+    this._updateTimerTextEvent.paused = true
 
+    this._infoText.setVisible(true)
     this._menuOverlay.setActive(true).setVisible(true)
 
     // TODO: reset timer.
     // this.input.on('pointerup', () => this.scene.start('level00'))
+  }
+
+  // #endregion
+
+  // #region Input Event Methods
+
+  onRestartGame (pointer, gameObject) {
+    this.initGame()
   }
 
   // #endregion

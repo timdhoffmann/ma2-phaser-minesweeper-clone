@@ -48,6 +48,19 @@ export default class Cell {
       .on('pointerdown', this.onCellClicked, this)
   }
 
+  init () {
+    this.isMine = false
+    this.surroundingMines = 0
+    this._isRevealed = false
+    this._isMarked = false
+    this._sprite
+      .setFrame(SpriteSheetIndex.Hidden)
+      .setInteractive()
+      .clearTint()
+  }
+
+  // #region Event Methods
+
   onCellClicked (pointer, gameObject) {
     if (!_scene.hasStartedGame) {
       _scene.startGame()
@@ -94,6 +107,8 @@ export default class Cell {
     }
   }
 
+  // #endregion
+
   // Reveals a cell that hasn't been revealed, yet.
   reveal () {
     // Prevents already revealed cells from revealing again.
@@ -115,7 +130,7 @@ export default class Cell {
     //
   }
 
-  showIfMine() {
+  showIfMine () {
     if (this.isMine) {
       this._sprite.setTint(0xdd0000)
     }

@@ -23,17 +23,21 @@ export default class Grid {
     this._gridHeight = gridHeight
     // Ths size of one cell in pixels.
     this._cellSize = cellSize
+    // The total count of mines to be placed.
+    this._totalMines = totalMines
 
     // Gap between cells in pixels.
     this._gap = 1
+    
+    // Debugging.
+    // Set to true, if mines should be indicated upon grid creation.
+    this._debugShowMines = true
+
     // A 2d array off cells [gridX][gridY] or [gridWidth][gridHeight].
     this._cells = this.createGrid()
 
-    this.distributeMines(totalMines)
-
-    // Debugging.
-    // Un-comment to show all mines at the beginning.
-    this.showMines()
+    // Initializes the grid state.
+    this.init()
   }
 
   // Creats a grid of cells.
@@ -57,6 +61,27 @@ export default class Grid {
     return cells
   }
 
+  // #region Initialization Methods
+
+  init () {
+    this.initCells()
+
+    this.distributeMines(this._totalMines)
+
+    if (this._debugShowMines) {
+      this.showAllMines()
+    }
+  }
+
+  initCells () {
+    // Iterates over all cells.
+    this._cells.forEach(column => {
+      column.forEach(cell => {
+        cell.init()
+      })
+    })
+  }
+
   // Distributes mines across an existing cell grid.
   distributeMines (minesToPlace) {
     while (minesToPlace > 0) {
@@ -76,6 +101,8 @@ export default class Grid {
 
     this.calculateAllCellsSurroundingMines()
   }
+
+  // #endregion
 
   // #region Surrounding Mines Methods
 
@@ -145,7 +172,8 @@ export default class Grid {
     }
   }
 
-  showMines () {
+  showAllMines () {
+    // Iterates over all cells.
     this._cells.forEach(column => {
       column.forEach(cell => {
         cell.showIfMine()
