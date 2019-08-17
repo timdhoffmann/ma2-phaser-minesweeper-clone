@@ -40,6 +40,8 @@ export default class Level00 extends Phaser.Scene {
 
     this.createTexts()
 
+    this.createMenu()
+
     this.input.mouse.disableContextMenu()
   }
 
@@ -104,6 +106,20 @@ export default class Level00 extends Phaser.Scene {
     )
   }
 
+  createMenu () {
+    this._menuOverlay = this.add.rectangle(
+      0,
+      0,
+      this.game.config.width,
+      this.game.config.height,
+      0xffffff,
+      0.4
+    )
+      .setOrigin(0)
+      .setInteractive()
+      .setVisible(false)
+  }
+
   // #endregion
 
   // #region Mine Counter Methods
@@ -149,6 +165,8 @@ export default class Level00 extends Phaser.Scene {
     console.log('game over')
     this.grid.showMines()
     this._infoText.setVisible(true)
+
+    this._menuOverlay.setActive(true).setVisible(true)
 
     // TODO: reset timer.
     // this.input.on('pointerup', () => this.scene.start('level00'))
