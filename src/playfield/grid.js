@@ -12,9 +12,6 @@ export default class Grid {
     cellSize,
     totalMines
   ) {
-    // Shows all mines for debugging.
-    this._debugShowMines = true
-
     // A reference to the parent phaser scene.
     this._scene = scene
     // The world position of the grid in pixels.
@@ -33,6 +30,10 @@ export default class Grid {
     this._cells = this.createGrid()
 
     this.distributeMines(totalMines)
+
+    // Debugging.
+    // Un-comment to show all mines at the beginning.
+    this.showMines()
   }
 
   // Creats a grid of cells.
@@ -71,9 +72,6 @@ export default class Grid {
       // Only executes if cell isn't a mine already.
       cell.isMine = true
       minesToPlace--
-      if (this._debugShowMines) {
-        cell.showIfMine()
-      }
     }
 
     this.calculateAllCellsSurroundingMines()
@@ -145,6 +143,14 @@ export default class Grid {
         }
       }
     }
+  }
+
+  showMines () {
+    this._cells.forEach(column => {
+      column.forEach(cell => {
+        cell.showIfMine()
+      })
+    })
   }
 
   // #region Helper Methods
