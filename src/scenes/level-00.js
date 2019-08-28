@@ -87,12 +87,13 @@ export default class Level00 extends Phaser.Scene {
       fill: 'white'
     })
 
-    this._infoText = this.add.text(
-      this.game.config.width / 2,
-      this.game.config.height / 2 - 20,
-      'Game Over!\n Click to restart.',
-      { font: '50px', fill: 'red' }
-    )
+    this._infoText = this.add
+      .text(
+        this.game.config.width / 2,
+        this.game.config.height / 2 - 20,
+        'infoText',
+        { font: '50px', fill: 'red' }
+      )
       .setAlign('center')
       .setOrigin(0.5)
       .setVisible(false)
@@ -129,7 +130,7 @@ export default class Level00 extends Phaser.Scene {
   // Initializes the game state.
   initGame () {
     this.hasStartedGame = false
-    
+
     this._infoText.setVisible(false)
     this._menuOverlay.setActive(false).setVisible(false)
 
@@ -180,17 +181,28 @@ export default class Level00 extends Phaser.Scene {
     }
   }
 
+  handleWin () {
+    console.log('win condition reached.')
+
+    this._updateTimerTextEvent.paused = true
+
+    this._infoText
+      .setVisible(true)
+      .setText('Awesome!\n You beat the game!')
+      .setColor('#00ff00')
+    this._menuOverlay.setActive(true).setVisible(true)
+  }
+
   handleGameOver () {
-    // TODO: trigger game over handling.
-    console.log('game over')
+    console.log('game over.')
     this.grid.showAllMines()
     this._updateTimerTextEvent.paused = true
 
-    this._infoText.setVisible(true)
+    this._infoText
+      .setText('Game Over!\n Click to restart.')
+      .setColor('#ff0000')
+      .setVisible(true)
     this._menuOverlay.setActive(true).setVisible(true)
-
-    // TODO: reset timer.
-    // this.input.on('pointerup', () => this.scene.start('level00'))
   }
 
   // #endregion

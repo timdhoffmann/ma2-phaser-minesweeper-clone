@@ -4,7 +4,8 @@ import { Scene } from 'phaser'
 const SpriteSheetIndex = Object.freeze({
   Hidden: 0,
   Marked: 9,
-  Revealed: 10
+  Revealed: 10,
+  Mine: 11
 })
 
 // FIXME: workaround to get intellisense.
@@ -118,6 +119,8 @@ export default class Cell {
 
     this._isRevealed = true
 
+    _scene.grid.incrementCellsRevealed()
+
     // Cell has surrounding mines.
     if (this.surroundingMines > 0) {
       this._sprite.setFrame(this.surroundingMines)
@@ -126,13 +129,11 @@ export default class Cell {
       this._sprite.setFrame(SpriteSheetIndex.Revealed)
       _scene.grid.autoRevealSurroundingCells(this)
     }
-    // TODO: Set sprite according to state.
-    //
   }
 
   showIfMine () {
     if (this.isMine) {
-      this._sprite.setTint(0xdd0000)
+      this._sprite.setFrame(SpriteSheetIndex.Mine)
     }
   }
 }

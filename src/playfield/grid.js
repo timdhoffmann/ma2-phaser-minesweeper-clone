@@ -12,6 +12,7 @@ export default class Grid {
     cellSize,
     totalMines
   ) {
+    // "Private" properties.
     // A reference to the parent phaser scene.
     this._scene = scene
     // The world position of the grid in pixels.
@@ -25,19 +26,43 @@ export default class Grid {
     this._cellSize = cellSize
     // The total count of mines to be placed.
     this._totalMines = totalMines
+    // The amount of cells that have been revealed by the player.
+    this._cellsRevealed = 0
 
     // Gap between cells in pixels.
     this._gap = 1
-    
+
     // Debugging.
     // Set to true, if mines should be indicated upon grid creation.
-    this._debugShowMines = false
+    this._debugShowMines = true
 
     // A 2d array off cells [gridX][gridY] or [gridWidth][gridHeight].
     this._cells = this.createGrid()
 
     // Initializes the grid state.
     this.init()
+  }
+
+  // #region Getters and Setters
+
+  get totalCells () {
+    return this._gridWidth * this._gridHeight
+  }
+
+  get hasRemainingCells () {
+    return this.totalCells - this._totalMines - this._cellsRevealed > 0
+  }
+
+  // #endregion
+
+  // TODO: Should the win condition better be checked elsewhere?
+  incrementCellsRevealed () {
+    this._cellsRevealed++
+
+    // Checks for win condition.
+    if (!this.hasRemainingCells) {
+      this._scene.handleWin()
+    }
   }
 
   // Creats a grid of cells.
@@ -64,6 +89,8 @@ export default class Grid {
   // #region Initialization Methods
 
   init () {
+    this._cellsRevealed = 0
+
     this.initCells()
 
     this.distributeMines(this._totalMines)
@@ -172,6 +199,8 @@ export default class Grid {
     }
   }
 
+  // #region Helper Methods
+
   showAllMines () {
     // Iterates over all cells.
     this._cells.forEach(column => {
@@ -180,8 +209,6 @@ export default class Grid {
       })
     })
   }
-
-  // #region Helper Methods
 
   // Gets the cell at the requested location.
   // Returns the cell or null if the request was outside of the grid.
