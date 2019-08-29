@@ -1,8 +1,12 @@
 import Phaser from 'phaser'
 import Grid from '../playfield/grid'
-// import Cell from '../playfield/cell'
 // Assets.
 import cellsImg from '../assets/playfield/cells.png'
+
+const _easyGridSizeX = 8
+const _easyGridSizeY = 8
+const _mediumGridSizeX = 16
+const _mediumGridSizeY = 16
 
 export default class Level00 extends Phaser.Scene {
   constructor () {
@@ -13,8 +17,10 @@ export default class Level00 extends Phaser.Scene {
     this.hasStartedGame = false
 
     // "Private" properties.
+
     this._cellSize = 60
-    this._easyGridSize = 8
+    this._gridSizeX = 0
+    this._gridSizeY = 0
     this._totalMines = 10
     this._mineCounter = this._totalMines
     this._timeAtStartedGame = 0
@@ -107,7 +113,7 @@ export default class Level00 extends Phaser.Scene {
 
     // Creates the info text.
     this._infoText = this.add
-      .text(this.game.config.width / 2, 100, 'Menu', {
+      .text(this.game.config.width / 2, 100, 'New Game', {
         font: '50px',
         fill: 'white'
       })
@@ -116,36 +122,53 @@ export default class Level00 extends Phaser.Scene {
       .setDepth(100)
     this._menu.add(this._infoText)
 
-    // Creates difficulty buttons.
-    this._easyDifficultyButton = this.add
-      .text(
-        this.game.config.width / 2,
-        this.game.config.height / 2 - 20,
-        `Easy: ${this._easyGridSize} x ${this._easyGridSize}`,
-        {
-          font: '25px',
-          fill: 'white'
-        }
-      )
-      .setOrigin(0.5)
-      .setInteractive()
-      .on('pointerdown', event => {
-        this._menu.toggleVisible()
-
-        this.createGrid(this._easyGridSize, this._easyGridSize)
-
-        this.initGame()
-      })
-      .on('pointerover', event => {
-        this._easyDifficultyButton.setColor('#cccccc').setFontStyle('bold')
-      })
-      .on('pointerout', event => {
-        this._easyDifficultyButton.setColor('#ffffff').setFontStyle('normal')
-      })
+    // TODO: Refactor difficulty buttons in own class.
+    // Creates the easy difficulty button.
+    this._easyDifficultyButton = this.createButton(
+      this.game.config.width / 2,
+      this.game.config.height / 2 - 20,
+      `Easy ${_easyGridSizeX} x ${_easyGridSizeX}`
+    ).on('pointerdown', event => {
+      this._menu.toggleVisible()
+      this._gridSizeX = _easyGridSizeX
+      this._gridSizeY = _easyGridSizeY
+      this.createGrid(this._gridSizeX, this._gridSizeY)
+      this.initGame()
+    })
     this._menu.add(this._easyDifficultyButton)
+
+    // Creates the medium difficulty button.
+    this._mediumDifficultyButton = this.createButton(
+      this.game.config.width / 2,
+      this.game.config.height / 2 + 20,
+      `Medium ${this._gridSizeX} x ${this._gridSizeX}`
+    ).on('pointerdown', event => {
+      this._menu.toggleVisible()
+      this._gridSizeX = _mediumGridSizeX
+      this._gridSizeY = _mediumGridSizeY
+      this.createGrid(this._gridSizeX, this._gridSizeY)
+      this.initGame()
+    })
+    this._menu.add(this._mediumDifficultyButton)
 
     // Sets the rendering depth to be in front of other objects.
     this._menu.setDepth(100)
+  }
+
+  createButton (x, y, text) {
+    return this.add
+      .text(x, y, text, {
+        font: '25px',
+        fill: 'white'
+      })
+      .setOrigin(0.5)
+      .setInteractive()
+      .on('pointerover', function (event) {
+        this.setColor('#cccccc').setFontStyle('bold')
+      })
+      .on('pointerout', function (event) {
+        this.setColor('#ffffff').setFontStyle('normal')
+      })
   }
 
   // #endregion
@@ -155,6 +178,10 @@ export default class Level00 extends Phaser.Scene {
     // Shows the counter texts on first game start.
     if (!this.hasStartedGame) {
       this._counterTexts.toggleVisible()
+    }
+
+    if (this.grid != null) {
+      // TODO: Destroy old grid.
     }
 
     this.hasStartedGame = false
