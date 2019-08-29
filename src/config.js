@@ -10,7 +10,7 @@ export const config = {
     parent: 'gameContainer',
     autoCenter: Phaser.Scale.CENTER_BOTH,
     width: 1024,
-    height: 1024
+    height: 1100
   },
   backgroundColor: 0x222222,
   // Loads the first scene in the array first.

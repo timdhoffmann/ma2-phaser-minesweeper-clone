@@ -104,6 +104,15 @@ export default class Grid {
     })
   }
 
+  destroy () {
+    // Destroys all cells' graphics.
+    this._cells.forEach(column => {
+      column.forEach(cell => {
+        cell._sprite.destroy()
+      })
+    })
+  }
+
   // Distributes mines across an existing cell grid.
   distributeMines (cellToIgnore) {
     let minesToPlace = this._totalMines

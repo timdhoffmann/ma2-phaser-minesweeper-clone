@@ -3,10 +3,13 @@ import Grid from '../playfield/grid'
 // Assets.
 import cellsImg from '../assets/playfield/cells.png'
 
+// Difficulty settings.
 const _easyGridSizeX = 8
 const _easyGridSizeY = 8
+const _easyTotalMines = 10
 const _mediumGridSizeX = 16
 const _mediumGridSizeY = 16
+const _mediumTotalMines = 40
 
 export default class Level00 extends Phaser.Scene {
   constructor () {
@@ -17,14 +20,12 @@ export default class Level00 extends Phaser.Scene {
     this.hasStartedGame = false
 
     // "Private" properties.
-
     this._cellSize = 60
-    this._gridSizeX = 0
-    this._gridSizeY = 0
-    this._totalMines = 10
-    this._mineCounter = this._totalMines
+    this._mineCounter = 0
     this._timeAtStartedGame = 0
   }
+
+  // #region Phaser Caallbacks.
 
   preload () {
     this.load.spritesheet('cells', cellsImg, {
@@ -32,8 +33,6 @@ export default class Level00 extends Phaser.Scene {
       frameHeight: this._cellSize
     })
   }
-
-  // #region Create.
 
   create () {
     this.createTimeEvents()
@@ -44,6 +43,10 @@ export default class Level00 extends Phaser.Scene {
 
     this.input.mouse.disableContextMenu()
   }
+
+  // #endregion
+
+  // #region Create Methods.
 
   createTimeEvents () {
     // Event to update the clock every "delay" milliseconds.
@@ -59,36 +62,24 @@ export default class Level00 extends Phaser.Scene {
     })
   }
 
-  createGrid (gridWidth, gridHeight) {
-    this.grid = new Grid(
-      this,
-      40,
-      100,
-      gridWidth,
-      gridHeight,
-      this._cellSize,
-      this._totalMines
-    )
-  }
-
   createCounterTexts () {
     this._counterTexts = this.add.group()
 
-    this._mineCounterText = this.add.text(
-      20,
-      20,
-      `Mines: ${this._mineCounter}`,
-      {
+    const x = this.game.canvas.width * 0.5
+    const y = 30
+    this._mineCounterText = this.add
+      .text(x - 20, y, `Mines: ${this._mineCounter}`, {
         font: '25px',
         fill: 'white'
-      }
-    )
+      })
+      .setOrigin(1, 0)
     this._counterTexts.add(this._mineCounterText)
 
-    this._timerText = this.add.text(20, 45, `Time: 0:00`, {
+    this._timerText = this.add.text(x + 20, y, `Time: 0:00`, {
       font: '25px',
       fill: 'white'
     })
+
     this._counterTexts.add(this._timerText)
     this._counterTexts.toggleVisible()
   }
@@ -113,7 +104,7 @@ export default class Level00 extends Phaser.Scene {
 
     // Creates the info text.
     this._infoText = this.add
-      .text(this.game.config.width / 2, 100, 'New Game', {
+      .text(this.game.config.width / 2, 130, 'New Game', {
         font: '50px',
         fill: 'white'
       })
@@ -126,28 +117,22 @@ export default class Level00 extends Phaser.Scene {
     // Creates the easy difficulty button.
     this._easyDifficultyButton = this.createButton(
       this.game.config.width / 2,
-      this.game.config.height / 2 - 20,
+      230,
       `Easy ${_easyGridSizeX} x ${_easyGridSizeX}`
     ).on('pointerdown', event => {
       this._menu.toggleVisible()
-      this._gridSizeX = _easyGridSizeX
-      this._gridSizeY = _easyGridSizeY
-      this.createGrid(this._gridSizeX, this._gridSizeY)
-      this.initGame()
+      this.initGame(_easyGridSizeX, _easyGridSizeY, _easyTotalMines)
     })
     this._menu.add(this._easyDifficultyButton)
 
     // Creates the medium difficulty button.
     this._mediumDifficultyButton = this.createButton(
       this.game.config.width / 2,
-      this.game.config.height / 2 + 20,
-      `Medium ${this._gridSizeX} x ${this._gridSizeX}`
+      290,
+      `Medium ${_mediumGridSizeX} x ${_mediumGridSizeY}`
     ).on('pointerdown', event => {
       this._menu.toggleVisible()
-      this._gridSizeX = _mediumGridSizeX
-      this._gridSizeY = _mediumGridSizeY
-      this.createGrid(this._gridSizeX, this._gridSizeY)
-      this.initGame()
+      this.initGame(_mediumGridSizeX, _mediumGridSizeY, _mediumTotalMines)
     })
     this._menu.add(this._mediumDifficultyButton)
 
@@ -158,7 +143,7 @@ export default class Level00 extends Phaser.Scene {
   createButton (x, y, text) {
     return this.add
       .text(x, y, text, {
-        font: '25px',
+        font: '30px',
         fill: 'white'
       })
       .setOrigin(0.5)
@@ -173,20 +158,20 @@ export default class Level00 extends Phaser.Scene {
 
   // #endregion
 
+  // #region Game Initialization Methods
+
   // Initializes the game state.
-  initGame () {
+  initGame (gridWidth, gridHeight, totalMines) {
+    this.createNewGrid(gridWidth, gridHeight, totalMines)
+
     // Shows the counter texts on first game start.
     if (!this.hasStartedGame) {
       this._counterTexts.toggleVisible()
     }
 
-    if (this.grid != null) {
-      // TODO: Destroy old grid.
-    }
-
     this.hasStartedGame = false
 
-    this._mineCounter = this._totalMines
+    this._mineCounter = totalMines
     this._mineCounterText.text = `Mines: ${this._mineCounter}`
 
     this._timerText.text = 'Time: 0:00'
@@ -194,6 +179,35 @@ export default class Level00 extends Phaser.Scene {
 
     this.grid.init()
   }
+
+  // Creates a new grid.
+  createNewGrid (gridWidth, gridHeight, totalMines) {
+    // Clears any existing grid.
+    if (this.grid != null) {
+      this.grid.destroy()
+      this.grid = null
+    }
+
+    const x = this.game.canvas.width * 0.5 - gridWidth * this._cellSize * 0.5
+    this.grid = new Grid(
+      this,
+      x,
+      100,
+      gridWidth,
+      gridHeight,
+      this._cellSize,
+      totalMines
+    )
+
+    // Aligns the counter texts.
+    // this._mineCounterText.setPosition(x, this._mineCounterText.y)
+    // this._timerText.setPosition(
+    //   x + gridWidth * this._cellSize,
+    //   this._timerText.y
+    // )
+  }
+
+  // #endregion
 
   // #region Mine Counter Methods
 
@@ -238,7 +252,9 @@ export default class Level00 extends Phaser.Scene {
 
     this._updateTimerTextEvent.paused = true
 
-    this._infoText.setText('Awesome!\n You beat the game!').setColor('#00ff00')
+    this._infoText
+      .setText('Awesome!\n You beat the game. Start again:')
+      .setColor('#00ff00')
     this._menu.toggleVisible()
   }
 
@@ -247,7 +263,9 @@ export default class Level00 extends Phaser.Scene {
     this.grid.showAllMines()
     this._updateTimerTextEvent.paused = true
 
-    this._infoText.setText('Game Over!\n Click to restart.').setColor('#ff0000')
+    this._infoText
+      .setText('Game Over!\n Choose your difficulty:')
+      .setColor('#ff0000')
     this._menu.toggleVisible()
   }
 
