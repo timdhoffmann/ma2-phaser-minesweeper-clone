@@ -2,7 +2,6 @@ import Phaser from 'phaser'
 import Grid from '../playfield/grid'
 // import Cell from '../playfield/cell'
 // Assets.
-import flagImg from '../assets/flag.png'
 import cellsImg from '../assets/playfield/cells.png'
 
 export default class Level00 extends Phaser.Scene {
@@ -22,7 +21,6 @@ export default class Level00 extends Phaser.Scene {
   }
 
   preload () {
-    this.load.image('flag', flagImg)
     this.load.spritesheet('cells', cellsImg, {
       frameWidth: this._cellSize,
       frameHeight: this._cellSize

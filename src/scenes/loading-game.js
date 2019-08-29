@@ -7,7 +7,7 @@ class LoadingGame extends Scene {
     super({ key: 'loadingGame' })
 
     // TODO: only used for dev. Remove.
-    this.flagAnimationDuration = 0
+    this.flagAnimationDurationMs = 500
   }
 
   preload () {
@@ -52,7 +52,7 @@ class LoadingGame extends Scene {
       targets: this.flag,
       scale: 20,
       ease: 'in',
-      duration: this.flagAnimationDuration,
+      duration: this.flagAnimationDurationMs,
       onComplete: () => {
         this.fadeOutAndLoadLevel()
       }
