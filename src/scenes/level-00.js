@@ -172,12 +172,13 @@ export default class Level00 extends Phaser.Scene {
 
   // #region Game Flow Methods
 
-  startGame () {
+  startGame (callingCell) {
     if (!this.hasStartedGame) {
       // this.time.update(0)
       this._timeAtStartedGame = this.time.now
       this._updateTimerTextEvent.paused = false
       this.hasStartedGame = true
+      this.grid.distributeMines(callingCell)
     }
   }
 

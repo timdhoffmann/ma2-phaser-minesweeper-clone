@@ -64,7 +64,7 @@ export default class Cell {
 
   onCellClicked (pointer, gameObject) {
     if (!_scene.hasStartedGame) {
-      _scene.startGame()
+      _scene.startGame(this)
     }
 
     // Right mouse button pressed.

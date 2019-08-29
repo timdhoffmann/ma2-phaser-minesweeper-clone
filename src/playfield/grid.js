@@ -1,5 +1,5 @@
 import Cell from './cell'
-import { Scene, Math } from 'phaser'
+import { Math } from 'phaser'
 
 // Represents the grid of cells that makes the playfield.
 export default class Grid {
@@ -92,14 +92,9 @@ export default class Grid {
     this._cellsRevealed = 0
 
     this.initCells()
-
-    this.distributeMines(this._totalMines)
-
-    if (this._debugShowMines) {
-      this.showAllMines()
-    }
   }
 
+  // Initializes each cell's state.
   initCells () {
     // Iterates over all cells.
     this._cells.forEach(column => {
@@ -110,7 +105,9 @@ export default class Grid {
   }
 
   // Distributes mines across an existing cell grid.
-  distributeMines (minesToPlace) {
+  distributeMines (cellToIgnore) {
+    let minesToPlace = this._totalMines
+
     while (minesToPlace > 0) {
       const randomX = Math.RND.between(0, this._gridWidth - 1)
       const randomY = Math.RND.between(0, this._gridHeight - 1)
@@ -121,9 +118,20 @@ export default class Grid {
         continue
       }
 
+      // Skips the calling cell (first cell revealed).
+      if (cellToIgnore != null) {
+        if (randomX === cellToIgnore.gridX && randomY === cellToIgnore.gridY) {
+          continue
+        }
+      }
+
       // Only executes if cell isn't a mine already.
       cell.isMine = true
       minesToPlace--
+    }
+
+    if (this._debugShowMines) {
+      this.showAllMines()
     }
 
     this.calculateAllCellsSurroundingMines()
