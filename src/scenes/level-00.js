@@ -34,8 +34,6 @@ export default class Level00 extends Phaser.Scene {
   create () {
     this.createTimeEvents()
 
-    this.createFlag()
-
     this.createGrid()
 
     this.createTexts()
@@ -98,15 +96,6 @@ export default class Level00 extends Phaser.Scene {
       .setOrigin(0.5)
       .setVisible(false)
       .setDepth(100)
-  }
-
-  createFlag () {
-    const flag = this.add.image(0, 0, 'flag')
-    flag.setScale(0.5)
-    flag.setPosition(
-      this._gridSize * this._cellSize + flag.displayWidth,
-      this.game.config.height / 2
-    )
   }
 
   createMenu () {
