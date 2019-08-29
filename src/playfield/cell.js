@@ -74,7 +74,6 @@ export default class Cell {
     }
 
     // Left mouse button pressed.
-
     this.handleLeftMouseButton()
   }
 
@@ -92,13 +91,17 @@ export default class Cell {
   }
 
   handleLeftMouseButton () {
+    // Prevents clicking marked cell.
+    if (this._isMarked) {
+      return
+    }
+
     if (this.isMine) {
       // Cell is a mine.
       // TODO: replace tinting with correct sprite.
       this._sprite.setTint(0xff0000)
       this._sprite.removeInteractive()
-      // this._sprite.disableInteractive()
-      // this._sprite.setFrame(SpriteSheetIndex.Marked)
+
       // Game over.
       _scene.handleGameOver()
     } else {
