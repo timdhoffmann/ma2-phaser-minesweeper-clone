@@ -46,7 +46,20 @@ export default class Cell {
         this._sprite.clearTint()
       })
       // TODO: Change to pointer up, if possible with right mouse?
-      .on('pointerdown', this.onCellClicked, this)
+      .on('pointerdown', pointer => {
+        if (!_scene.hasStartedGame) {
+          _scene.startGame(this)
+        }
+
+        // Right mouse button pressed.
+        if (pointer.rightButtonDown()) {
+          this.handleRightMouseButton()
+          return
+        }
+
+        // Left mouse button pressed.
+        this.handleLeftMouseButton()
+      })
   }
 
   init () {
@@ -61,21 +74,6 @@ export default class Cell {
   }
 
   // #region Event Methods
-
-  onCellClicked (pointer, gameObject) {
-    if (!_scene.hasStartedGame) {
-      _scene.startGame(this)
-    }
-
-    // Right mouse button pressed.
-    if (pointer.rightButtonDown()) {
-      this.handleRightMouseButton()
-      return
-    }
-
-    // Left mouse button pressed.
-    this.handleLeftMouseButton()
-  }
 
   // Marks cells as mines with right click.
   handleRightMouseButton () {
