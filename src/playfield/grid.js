@@ -97,8 +97,8 @@ export default class Grid {
   // Initializes each cell's state.
   initCells () {
     // Iterates over all cells.
-    this._cells.forEach(column => {
-      column.forEach(cell => {
+    this._cells.forEach((column) => {
+      column.forEach((cell) => {
         cell.init()
       })
     })
@@ -106,9 +106,9 @@ export default class Grid {
 
   destroy () {
     // Destroys all cells' graphics.
-    this._cells.forEach(column => {
-      column.forEach(cell => {
-        cell._sprite.destroy()
+    this._cells.forEach((column) => {
+      column.forEach((cell) => {
+        cell.destroy()
       })
     })
   }
@@ -220,8 +220,8 @@ export default class Grid {
 
   showAllMines () {
     // Iterates over all cells.
-    this._cells.forEach(column => {
-      column.forEach(cell => {
+    this._cells.forEach((column) => {
+      column.forEach((cell) => {
         cell.showIfMine()
       })
     })

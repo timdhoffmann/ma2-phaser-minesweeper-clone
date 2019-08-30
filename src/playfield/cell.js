@@ -39,14 +39,14 @@ export default class Cell {
       .setOrigin(0)
       .setInteractive()
       // Tints the cell for a hover effect.
-      .on('pointerover', event => {
+      .on('pointerover', (event) => {
         this._sprite.setTint(0xeeeeee)
       })
-      .on('pointerout', event => {
+      .on('pointerout', (event) => {
         this._sprite.clearTint()
       })
       // TODO: Change to pointer up, if possible with right mouse?
-      .on('pointerdown', pointer => {
+      .on('pointerdown', (pointer) => {
         if (!_scene.hasStartedGame) {
           _scene.startGame(this)
         }
@@ -62,6 +62,9 @@ export default class Cell {
       })
   }
 
+  // #region Initialization and Destruction Methods
+
+  // Initializes the internal state.
   init () {
     this.isMine = false
     this.surroundingMines = 0
@@ -72,6 +75,13 @@ export default class Cell {
       .setInteractive()
       .clearTint()
   }
+
+  // Destroys the sprite.
+  destroy () {
+    this._sprite.destroy()
+  }
+
+  // #endregion
 
   // #region Event Methods
 
@@ -111,6 +121,8 @@ export default class Cell {
 
   // #endregion
 
+  // #region Display Methods.
+
   // Reveals a cell that hasn't been revealed, yet.
   reveal () {
     // Prevents already revealed cells from revealing again.
@@ -137,4 +149,6 @@ export default class Cell {
       this._sprite.setFrame(SpriteSheetIndex.Mine)
     }
   }
+
+  // #endregion
 }
