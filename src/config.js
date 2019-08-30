@@ -6,11 +6,11 @@ import Level00 from './scenes/level-00'
 export const config = {
   type: Phaser.AUTO,
   scale: {
-    mode: Phaser.Scale.NONE,
+    mode: Phaser.Scale.RESIZE,
     parent: 'gameContainer',
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: 1024,
-    height: 1100
+    width: '100%',
+    height: '100%'
   },
   backgroundColor: 0x222222,
   // Loads the first scene in the array first.

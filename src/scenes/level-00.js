@@ -25,7 +25,7 @@ export default class Level00 extends Phaser.Scene {
     this._timeAtStartedGame = 0
   }
 
-  // #region Phaser Caallbacks.
+  // #region Phaser Caallback Methods.
 
   preload () {
     this.load.spritesheet('cells', cellsImg, {
@@ -42,6 +42,10 @@ export default class Level00 extends Phaser.Scene {
     this.createMenu()
 
     this.input.mouse.disableContextMenu()
+
+    this.createTransitionFill()
+
+    this.fadeFromBlack()
   }
 
   // #endregion
@@ -92,8 +96,8 @@ export default class Level00 extends Phaser.Scene {
       .rectangle(
         0,
         0,
-        this.game.config.width,
-        this.game.config.height,
+        this.game.scale.width,
+        this.game.scale.height,
         0x000000,
         0.7
       )
@@ -104,7 +108,7 @@ export default class Level00 extends Phaser.Scene {
 
     // Creates the info text.
     this._infoText = this.add
-      .text(this.game.config.width / 2, 130, 'New Game', {
+      .text(this.game.scale.width * 0.5, 130, 'New Game', {
         font: '50px',
         fill: 'white'
       })
@@ -116,10 +120,10 @@ export default class Level00 extends Phaser.Scene {
     // TODO: Refactor difficulty buttons in own class.
     // Creates the easy difficulty button.
     this._easyDifficultyButton = this.createButton(
-      this.game.config.width / 2,
+      this.game.scale.width * 0.5,
       230,
       `Easy ${_easyGridSizeX} x ${_easyGridSizeX}`
-    ).on('pointerdown', event => {
+    ).on('pointerdown', (event) => {
       this._menu.toggleVisible()
       this.initGame(_easyGridSizeX, _easyGridSizeY, _easyTotalMines)
     })
@@ -127,10 +131,10 @@ export default class Level00 extends Phaser.Scene {
 
     // Creates the medium difficulty button.
     this._mediumDifficultyButton = this.createButton(
-      this.game.config.width / 2,
+      this.game.scale.width * 0.5,
       290,
       `Medium ${_mediumGridSizeX} x ${_mediumGridSizeY}`
-    ).on('pointerdown', event => {
+    ).on('pointerdown', (event) => {
       this._menu.toggleVisible()
       this.initGame(_mediumGridSizeX, _mediumGridSizeY, _mediumTotalMines)
     })
@@ -156,12 +160,28 @@ export default class Level00 extends Phaser.Scene {
       })
   }
 
+  createTransitionFill () {
+    // Creates the overlay.
+    this._transitionFill = this.add
+      .rectangle(
+        0,
+        0,
+        this.game.scale.width,
+        this.game.scale.height,
+        this.game.config.backgroundColor,
+        1
+      )
+      .setOrigin(0)
+      .setDepth(1000)
+  }
+
   // #endregion
 
   // #region Game Initialization Methods
 
   // Initializes the game state.
   initGame (gridWidth, gridHeight, totalMines) {
+    // this.game.canvas.
     this.createNewGrid(gridWidth, gridHeight, totalMines)
 
     // Shows the counter texts on first game start.
@@ -292,4 +312,14 @@ export default class Level00 extends Phaser.Scene {
   }
 
   // #endregion
+
+  fadeFromBlack () {
+    this.tweens.add({
+      targets: this._transitionFill,
+      alpha: 0,
+      ease: 'power2',
+      duration: 5000,
+      onComplete: () => {}
+    })
+  }
 }

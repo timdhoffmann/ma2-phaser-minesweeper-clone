@@ -7,7 +7,7 @@ class LoadingGame extends Scene {
     super({ key: 'loadingGame' })
 
     // TODO: only used for dev. Remove.
-    this.flagAnimationDurationMs = 500
+    this.flagAnimationDurationMs = 4000
   }
 
   preload () {
@@ -20,14 +20,13 @@ class LoadingGame extends Scene {
   }
 
   createText () {
-    this.loadingText = this.add.text(
-      this.game.config.width,
-      this.game.config.height,
-      'Loading Game...'
-    )
-
-    this.loadingText.setOrigin(1)
-    this.loadingText.setPadding(0, 0, 50, 30)
+    this.loadingText = this.add
+      .text(this.game.scale.width, this.game.scale.height, 'Loading Game...', {
+        font: '30px',
+        fill: 'white'
+      })
+      .setOrigin(1)
+      .setPadding(0, 0, 50, 50)
 
     this.tweens.add({
       targets: this.loadingText,
@@ -41,8 +40,8 @@ class LoadingGame extends Scene {
 
   createFlag () {
     this.flag = this.add.image(
-      this.game.config.width / 2,
-      this.game.config.height / 2,
+      this.game.scale.width * 0.5,
+      this.game.scale.height * 0.5,
       'flag'
     )
 
