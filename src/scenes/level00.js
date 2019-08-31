@@ -25,6 +25,18 @@ export default class Level00 extends Phaser.Scene {
     this._timeAtStartedGame = 0
   }
 
+  // #region Getters and Setters.
+
+  get counterTextsX () {
+    return this.game.canvas.width * 0.5
+  }
+
+  get counterTextsY () {
+    return 40
+  }
+
+  // #endregion
+
   // #region Phaser Caallback Methods.
 
   preload () {
@@ -70,10 +82,13 @@ export default class Level00 extends Phaser.Scene {
   }
 
   createCounterTexts () {
-    this._counterTexts = this.add.group()
+    this._counterTexts = this.add.container(
+      this.counterTextsX,
+      this.counterTextsY
+    )
 
-    const x = this.game.canvas.width * 0.5
-    const y = 30
+    const x = 0
+    const y = 0
     this._mineCounterText = this.add
       .text(x - 20, y, `Mines: ${this._mineCounter}`, {
         font: '25px',
@@ -88,7 +103,7 @@ export default class Level00 extends Phaser.Scene {
     })
 
     this._counterTexts.add(this._timerText)
-    this._counterTexts.toggleVisible()
+    this._counterTexts.setVisible(false)
   }
 
   createMenu () {
@@ -187,10 +202,7 @@ export default class Level00 extends Phaser.Scene {
     // this.game.canvas.
     this.createNewGrid(gridWidth, gridHeight, totalMines)
 
-    // Shows the counter texts on first game start.
-    if (!this.hasStartedGame) {
-      this._counterTexts.toggleVisible()
-    }
+    this._counterTexts.setVisible(true)
 
     this.hasStartedGame = false
 
