@@ -32,6 +32,12 @@ export default class Level00 extends Phaser.Scene {
       frameWidth: this._cellSize,
       frameHeight: this._cellSize
     })
+
+    // Loads google Webfont.
+    this.load.script(
+      'webfont',
+      'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js'
+    )
   }
 
   create () {
@@ -117,7 +123,6 @@ export default class Level00 extends Phaser.Scene {
       })
       .setAlign('center')
       .setOrigin(0.5)
-      .setDepth(100)
     this._menu.add(this._infoText)
 
     // TODO: Refactor difficulty buttons in own class.
@@ -127,7 +132,7 @@ export default class Level00 extends Phaser.Scene {
       230,
       `Easy ${_easyGridSizeX} x ${_easyGridSizeX}`
     ).on('pointerdown', (event) => {
-      this._menu.toggleVisible()
+      this._menu.setVisible(false)
       this.initGame(_easyGridSizeX, _easyGridSizeY, _easyTotalMines)
     })
     this._menu.add(this._easyDifficultyButton)
@@ -138,11 +143,39 @@ export default class Level00 extends Phaser.Scene {
       290,
       `Medium ${_mediumGridSizeX} x ${_mediumGridSizeY}`
     ).on('pointerdown', (event) => {
-      this._menu.toggleVisible()
+      this._menu.setVisible(false)
       this.initGame(_mediumGridSizeX, _mediumGridSizeY, _mediumTotalMines)
     })
     this._menu.add(this._mediumDifficultyButton)
 
+    const add = this.add
+
+    WebFont.load({
+      google: {
+        families: ['Freckle Face', 'Finger Paint', 'Nosifer']
+      },
+      active: function () {
+        add
+          .text(16, 0, 'The face of the\nmoon was in\nshadow.', {
+            fontFamily: 'Freckle Face',
+            fontSize: 80,
+            color: '#ffffff'
+          })
+          .setShadow(2, 2, '#333333', 2, false, true)
+
+        add.text(250, 450, 'Waves flung themselves\nat the blue evening.', {
+          fontFamily: 'Finger Paint',
+          fontSize: 40,
+          color: '#5656ee'
+        })
+
+        var t = add.text(330, 200, 'R.I.P', {
+          fontFamily: 'Nosifer',
+          fontSize: 150,
+          color: '#ff3434'
+        })
+      }
+    })
     // Sets the rendering depth to be in front of other objects.
     this._menu.setDepth(100)
   }
@@ -278,7 +311,7 @@ export default class Level00 extends Phaser.Scene {
     this._infoText
       .setText('Awesome!\n You beat the game. Start again:')
       .setColor('#00ff00')
-    this._menu.toggleVisible()
+    this._menu.setVisible(true)
   }
 
   handleGameOver () {
@@ -289,7 +322,7 @@ export default class Level00 extends Phaser.Scene {
     this._infoText
       .setText('Game Over!\n Choose your difficulty:')
       .setColor('#ff0000')
-    this._menu.toggleVisible()
+    this._menu.setVisible(true)
   }
 
   // #endregion
