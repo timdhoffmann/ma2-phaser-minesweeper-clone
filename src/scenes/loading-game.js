@@ -9,7 +9,7 @@ export default class LoadingGame extends Scene {
     super({ key: 'loadingGame' })
 
     // TODO: change back to 4000.
-    this._titleDisplayDurationMs = 4000
+    this._titleDisplayDurationMs = 400
   }
 
   // #region Phaser Callback Methods.
@@ -23,7 +23,7 @@ export default class LoadingGame extends Scene {
 
     WebFont.load({
       google: {
-        families: ['Bevan']
+        families: ['Bungee Inline', 'Bevan']
       },
       // Creates the title and animation after fonts are loaded.
       active: this.createTitleImage()

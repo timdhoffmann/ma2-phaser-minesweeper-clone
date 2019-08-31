@@ -39,6 +39,10 @@ export default class Level00 extends Phaser.Scene {
     return 'Bevan'
   }
 
+  get counterFont () {
+    return 'Bungee Inline'
+  }
+
   // #endregion
 
   // #region Phaser Caallback Methods.
@@ -177,7 +181,7 @@ export default class Level00 extends Phaser.Scene {
         font: '50px',
         fill: 'white'
       })
-      .setFontFamily(this.displayFont)
+      .setFontFamily(this.counterFont)
       .setAlign('center')
       .setOrigin(0.5, 0)
     this._menu.add(this._infoText)
@@ -190,7 +194,7 @@ export default class Level00 extends Phaser.Scene {
       this._infoText.getBottomCenter().y + 20,
       `Easy ${_easyGridSizeX} x ${_easyGridSizeX}`
     ).on('pointerdown', (event) => {
-      this._menu.setVisible(false)
+      this.showMenu(false)
       this.initGame(_easyGridSizeX, _easyGridSizeY, _easyTotalMines)
     })
     this._menu.add(this._easyDifficultyButton)
@@ -201,7 +205,7 @@ export default class Level00 extends Phaser.Scene {
       this._easyDifficultyButton.getBottomCenter().y + 20,
       `Normal ${_normalGridSizeX} x ${_normalGridSizeY}`
     ).on('pointerdown', (event) => {
-      this._menu.setVisible(false)
+      this.showMenu(false)
       this.initGame(_normalGridSizeX, _normalGridSizeY, _normalTotalMines)
     })
     this._menu.add(this._normalDifficultyButton)
@@ -213,7 +217,7 @@ export default class Level00 extends Phaser.Scene {
         font: '30px',
         fill: 'black'
       })
-      .setFontFamily(this.displayFont)
+      .setFontFamily(this.counterFont)
       .setOrigin(0.5, 0)
       .setInteractive()
       .on('pointerover', function (event) {
@@ -281,11 +285,7 @@ export default class Level00 extends Phaser.Scene {
     )
 
     // Aligns the counter texts.
-    // this._mineCounterText.setPosition(x, this._mineCounterText.y)
-    // this._timerText.setPosition(
-    //   x + gridWidth * this._cellSize,
-    //   this._timerText.y
-    // )
+    this._counterTexts.setPosition(this.counterTextsX, this.counterTextsY)
   }
 
   // #endregion
@@ -333,10 +333,8 @@ export default class Level00 extends Phaser.Scene {
 
     this._updateTimerTextEvent.paused = true
 
-    this._infoText
-      .setText('Awesome!\n You beat the game. Start again:')
-      .setColor('#00ff00')
-    this._menu.setVisible(true)
+    this._infoText.setText('Awesome! You beat the game.')
+    this.showMenu(true)
   }
 
   handleGameOver () {
@@ -345,7 +343,23 @@ export default class Level00 extends Phaser.Scene {
     this._updateTimerTextEvent.paused = true
 
     this._infoText.setText('Game Over. Start Again!')
-    this._menu.setVisible(true)
+    this.showMenu(true)
+  }
+
+  showMenu (value) {
+    const startAlpha = value ? 0 : 1
+    const endAlpha = value ? 1 : 0
+
+    this._menu.setAlpha(startAlpha)
+
+    this.tweens.add({
+      targets: this._menu,
+      alpha: endAlpha,
+      ease: 'power3',
+      duration: 500
+    })
+
+    // this._easyDifficultyButton
   }
 
   // #endregion
@@ -390,7 +404,6 @@ export default class Level00 extends Phaser.Scene {
 
     this.cameras.resize(width, height)
 
-    // this.bg.setSize(width, height);
     this._menu.setPosition(this.game.scale.width * 0.5, 0)
     this._menuOverlay.setScale(this.game.scale.width, this.game.scale.height)
   }
