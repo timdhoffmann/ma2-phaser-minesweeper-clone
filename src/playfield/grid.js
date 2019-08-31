@@ -55,7 +55,7 @@ export default class Grid {
 
   // #endregion
 
-  // TODO: Should the win condition better be checked elsewhere?
+  // Increments the number of revealed cells and checks for win condition.
   incrementCellsRevealed () {
     this._cellsRevealed++
 
@@ -152,8 +152,6 @@ export default class Grid {
 
   // Calculates surrounding mines for all cells.
   calculateAllCellsSurroundingMines () {
-    // TODO: try iterating over all cells with foreach instead. Needs reading gridX and gridY from each cell.
-
     // Iterates over all columns.
     for (let x = 0; x < this._gridWidth; x++) {
       // Iterates over all cells in a column, from top to bottom.
@@ -187,7 +185,6 @@ export default class Grid {
         }
       }
     }
-    // TODO: return calculated value.
     return surroundingMines
   }
 
@@ -197,7 +194,7 @@ export default class Grid {
     // Iterates over all surrounding cells.
     for (let x = -1; x < 2; x++) {
       for (let y = -1; y < 2; y++) {
-        // TODO: needs skipping checking itself?
+        // Skips the calling cell.
         if (x === 0 && y === 0) {
           continue
         }

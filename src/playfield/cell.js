@@ -8,8 +8,13 @@ const SpriteSheetIndex = Object.freeze({
   Mine: 11
 })
 
-// FIXME: workaround to get intellisense.
-// var is overwritten in constructor with actual reference.
+// IMPORTANT!:
+// This is a workaround to get intellisense during production.
+// It is only left in the code for demonstration puposes
+// and would be replaced in the final distribution with
+// a member variable.
+//
+// The var is overwritten in the constructor with the actual reference.
 var _scene = new Scene()
 
 // Represents a single cell of the playfield.
@@ -23,11 +28,10 @@ export default class Cell {
 
     // "Private" properties.
 
-    // FIXME: workaround to get intellisense.
-    // this._scene = new Scene() // FIXMEComment for production!
-    // this._scene = scene // Un-Comment for production!
+    // IMPORTANT!:
+    // This is a workaround to get intellisense during production.
+    // See comments at declaration above class.
     //
-    // Alternative intelliSense workaround for development.
     // Intentionally re-assigns correct reference.
     _scene = scene
 
@@ -45,7 +49,6 @@ export default class Cell {
       .on('pointerout', (event) => {
         this._sprite.clearTint()
       })
-      // TODO: Change to pointer up, if possible with right mouse?
       .on('pointerdown', (pointer) => {
         if (!_scene.hasStartedGame) {
           _scene.startGame(this)
@@ -106,7 +109,6 @@ export default class Cell {
 
     if (this.isMine) {
       // Cell is a mine.
-      // TODO: replace tinting with correct sprite.
       this._sprite.setTint(0xff0000)
       this._sprite.removeInteractive()
 
