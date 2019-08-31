@@ -9,7 +9,7 @@ export default class LoadingGame extends Scene {
     super({ key: 'loadingGame' })
 
     // TODO: change back to 4000.
-    this._titleDisplayDurationMs = 400
+    this._titleDisplayDurationMs = 3000
   }
 
   // #region Phaser Callback Methods.
