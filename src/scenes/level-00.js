@@ -41,11 +41,14 @@ export default class Level00 extends Phaser.Scene {
 
     this.createMenu()
 
-    this.input.mouse.disableContextMenu()
-
     this.createTransitionFill()
 
     this.fadeFromBlack()
+
+    // Event raised when window size changes.
+    this.scale.on('resize', this.onWindowResized, this)
+
+    this.input.mouse.disableContextMenu()
   }
 
   // #endregion
@@ -89,7 +92,7 @@ export default class Level00 extends Phaser.Scene {
   }
 
   createMenu () {
-    this._menu = this.add.group()
+    this._menu = this.add.container(this.game.scale.width * 0.5, 0)
 
     // Creates the overlay.
     this._menuOverlay = this.add
@@ -98,17 +101,17 @@ export default class Level00 extends Phaser.Scene {
         0,
         this.game.scale.width,
         this.game.scale.height,
-        0x000000,
+        0xff0000,
         0.7
       )
-      .setOrigin(0)
+      .setOrigin(0.5, 0)
       // When visible, blocks objects behind from receiving input.
       .setInteractive()
     this._menu.add(this._menuOverlay)
 
     // Creates the info text.
     this._infoText = this.add
-      .text(this.game.scale.width * 0.5, 130, 'New Game', {
+      .text(0, 130, 'New Game', {
         font: '50px',
         fill: 'white'
       })
@@ -120,7 +123,7 @@ export default class Level00 extends Phaser.Scene {
     // TODO: Refactor difficulty buttons in own class.
     // Creates the easy difficulty button.
     this._easyDifficultyButton = this.createButton(
-      this.game.scale.width * 0.5,
+      0,
       230,
       `Easy ${_easyGridSizeX} x ${_easyGridSizeX}`
     ).on('pointerdown', (event) => {
@@ -131,7 +134,7 @@ export default class Level00 extends Phaser.Scene {
 
     // Creates the medium difficulty button.
     this._mediumDifficultyButton = this.createButton(
-      this.game.scale.width * 0.5,
+      0,
       290,
       `Medium ${_mediumGridSizeX} x ${_mediumGridSizeY}`
     ).on('pointerdown', (event) => {
@@ -313,6 +316,8 @@ export default class Level00 extends Phaser.Scene {
 
   // #endregion
 
+  // #region Display Methods
+
   fadeFromBlack () {
     this.tweens.add({
       targets: this._transitionFill,
@@ -322,4 +327,18 @@ export default class Level00 extends Phaser.Scene {
       onComplete: () => {}
     })
   }
+
+  // Resizes the game dynamically.
+  onWindowResized (gameSize, baseSize, displaySize, resolution) {
+    const width = gameSize.width
+    const height = gameSize.height
+
+    this.cameras.resize(width, height)
+
+    // this.bg.setSize(width, height);
+    this._menu.setPosition(this.game.scale.width * 0.5, 0)
+    this._menuOverlay.setScale(this.game.scale.width, this.game.scale.height)
+  }
+
+  // #endregion
 }
