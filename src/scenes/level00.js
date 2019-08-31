@@ -7,9 +7,9 @@ import cellsImg from '../assets/playfield/cells.png'
 const _easyGridSizeX = 8
 const _easyGridSizeY = 8
 const _easyTotalMines = 10
-const _mediumGridSizeX = 16
-const _mediumGridSizeY = 16
-const _mediumTotalMines = 40
+const _normalGridSizeX = 16
+const _normalGridSizeY = 16
+const _normalTotalMines = 40
 
 export default class Level00 extends Phaser.Scene {
   constructor () {
@@ -98,13 +98,16 @@ export default class Level00 extends Phaser.Scene {
         font: '25px',
         fill: 'white'
       })
+      .setFontFamily(this.displayFont)
       .setOrigin(1, 0)
     this._counterTexts.add(this._mineCounterText)
 
-    this._timerText = this.add.text(x + 20, y, `Time: 0:00`, {
-      font: '25px',
-      fill: 'white'
-    })
+    this._timerText = this.add
+      .text(x + 20, y, `Time: 0:00`, {
+        font: '25px',
+        fill: 'white'
+      })
+      .setFontFamily(this.displayFont)
 
     this._counterTexts.add(this._timerText)
     this._counterTexts.setVisible(false)
@@ -135,30 +138,6 @@ export default class Level00 extends Phaser.Scene {
 
     // Sets the rendering depth to be in front of other objects.
     this._menu.setDepth(100)
-  }
-
-  createMenuButtons () {
-    // Creates the easy difficulty button.
-    this._easyDifficultyButton = this.createButton(
-      0,
-      this._infoText.getBottomCenter().y + 20,
-      `Easy ${_easyGridSizeX} x ${_easyGridSizeX}`
-    ).on('pointerdown', (event) => {
-      this._menu.setVisible(false)
-      this.initGame(_easyGridSizeX, _easyGridSizeY, _easyTotalMines)
-    })
-    this._menu.add(this._easyDifficultyButton)
-
-    // Creates the medium difficulty button.
-    this._mediumDifficultyButton = this.createButton(
-      0,
-      this._easyDifficultyButton.getBottomCenter().y + 20,
-      `Medium ${_mediumGridSizeX} x ${_mediumGridSizeY}`
-    ).on('pointerdown', (event) => {
-      this._menu.setVisible(false)
-      this.initGame(_mediumGridSizeX, _mediumGridSizeY, _mediumTotalMines)
-    })
-    this._menu.add(this._mediumDifficultyButton)
   }
 
   createMenuTexts () {
@@ -202,6 +181,30 @@ export default class Level00 extends Phaser.Scene {
       .setAlign('center')
       .setOrigin(0.5, 0)
     this._menu.add(this._infoText)
+  }
+
+  createMenuButtons () {
+    // Creates the easy difficulty button.
+    this._easyDifficultyButton = this.createButton(
+      0,
+      this._infoText.getBottomCenter().y + 20,
+      `Easy ${_easyGridSizeX} x ${_easyGridSizeX}`
+    ).on('pointerdown', (event) => {
+      this._menu.setVisible(false)
+      this.initGame(_easyGridSizeX, _easyGridSizeY, _easyTotalMines)
+    })
+    this._menu.add(this._easyDifficultyButton)
+
+    // Creates the normal difficulty button.
+    this._normalDifficultyButton = this.createButton(
+      0,
+      this._easyDifficultyButton.getBottomCenter().y + 20,
+      `Normal ${_normalGridSizeX} x ${_normalGridSizeY}`
+    ).on('pointerdown', (event) => {
+      this._menu.setVisible(false)
+      this.initGame(_normalGridSizeX, _normalGridSizeY, _normalTotalMines)
+    })
+    this._menu.add(this._normalDifficultyButton)
   }
 
   createButton (x, y, text) {
@@ -341,9 +344,7 @@ export default class Level00 extends Phaser.Scene {
     this.grid.showAllMines()
     this._updateTimerTextEvent.paused = true
 
-    this._infoText
-      .setText('Game Over!\n Choose your difficulty:')
-      .setColor('#ff0000')
+    this._infoText.setText('Game Over. Start Again!')
     this._menu.setVisible(true)
   }
 
