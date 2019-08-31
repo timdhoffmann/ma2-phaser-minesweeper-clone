@@ -334,6 +334,7 @@ export default class Level00 extends Phaser.Scene {
     this._updateTimerTextEvent.paused = true
 
     this._infoText.setText('Awesome! You beat the game.')
+    this._menuOverlay.setFillStyle(this.game.config.backgroundColor, 0.6)
     this.showMenu(true)
   }
 
@@ -343,6 +344,8 @@ export default class Level00 extends Phaser.Scene {
     this._updateTimerTextEvent.paused = true
 
     this._infoText.setText('Game Over. Start Again!')
+    this._menuOverlay.setFillStyle(0xff0000, 0.6)
+
     this.showMenu(true)
   }
 
