@@ -35,6 +35,10 @@ export default class Level00 extends Phaser.Scene {
     return 40
   }
 
+  get displayFont () {
+    return 'Bevan'
+  }
+
   // #endregion
 
   // #region Phaser Caallback Methods.
@@ -106,6 +110,7 @@ export default class Level00 extends Phaser.Scene {
     this._counterTexts.setVisible(false)
   }
 
+  // Creates the game menu.
   createMenu () {
     this._menu = this.add.container(this.game.scale.width * 0.5, 0)
 
@@ -124,21 +129,19 @@ export default class Level00 extends Phaser.Scene {
       .setInteractive()
     this._menu.add(this._menuOverlay)
 
-    // Creates the info text.
-    this._infoText = this.add
-      .text(0, 130, 'New Game', {
-        font: '50px',
-        fill: 'white'
-      })
-      .setFontFamily('Bevan')
-      .setAlign('center')
-      .setOrigin(0.5)
-    this._menu.add(this._infoText)
+    this.createMenuTexts()
 
+    this.createMenuButtons()
+
+    // Sets the rendering depth to be in front of other objects.
+    this._menu.setDepth(100)
+  }
+
+  createMenuButtons () {
     // Creates the easy difficulty button.
     this._easyDifficultyButton = this.createButton(
       0,
-      230,
+      this._infoText.getBottomCenter().y + 20,
       `Easy ${_easyGridSizeX} x ${_easyGridSizeX}`
     ).on('pointerdown', (event) => {
       this._menu.setVisible(false)
@@ -149,32 +152,72 @@ export default class Level00 extends Phaser.Scene {
     // Creates the medium difficulty button.
     this._mediumDifficultyButton = this.createButton(
       0,
-      290,
+      this._easyDifficultyButton.getBottomCenter().y + 20,
       `Medium ${_mediumGridSizeX} x ${_mediumGridSizeY}`
     ).on('pointerdown', (event) => {
       this._menu.setVisible(false)
       this.initGame(_mediumGridSizeX, _mediumGridSizeY, _mediumTotalMines)
     })
     this._menu.add(this._mediumDifficultyButton)
+  }
 
-    // Sets the rendering depth to be in front of other objects.
-    this._menu.setDepth(100)
+  createMenuTexts () {
+    // Creates the title text.
+    this._titleText = this.add
+      .text(0, 100, 'Minesweeper', {
+        font: '70px',
+        fill: 'white'
+      })
+      .setFontFamily(this.displayFont)
+      .setAlign('center')
+      .setOrigin(0.5, 0)
+    this._menu.add(this._titleText)
+
+    // Creates the subtitle text.
+    const titleBottomLeft = this._titleText.getBottomLeft()
+
+    this._subTitleText = this.add
+      .text(
+        titleBottomLeft.x,
+        titleBottomLeft.y - 10,
+        'Assignment by Tim Hoffmann',
+        {
+          font: '18px',
+          fill: 'white',
+          letterSpacing: '10px'
+        }
+      )
+      .setFontFamily(this.displayFont)
+      .setAlign('center')
+      .setOrigin(0)
+    this._menu.add(this._subTitleText)
+
+    // Creates the info text.
+    this._infoText = this.add
+      .text(0, this._titleText.getBottomCenter().y + 60, 'New Game', {
+        font: '50px',
+        fill: 'white'
+      })
+      .setFontFamily(this.displayFont)
+      .setAlign('center')
+      .setOrigin(0.5, 0)
+    this._menu.add(this._infoText)
   }
 
   createButton (x, y, text) {
     return this.add
       .text(x, y, text, {
         font: '30px',
-        fill: 'white'
+        fill: 'black'
       })
-      .setFontFamily('Bevan')
-      .setOrigin(0.5)
+      .setFontFamily(this.displayFont)
+      .setOrigin(0.5, 0)
       .setInteractive()
       .on('pointerover', function (event) {
-        this.setColor('#cccccc').setFontStyle('bold')
+        this.setColor('white').setFontStyle('bold')
       })
       .on('pointerout', function (event) {
-        this.setColor('#ffffff').setFontStyle('normal')
+        this.setColor('black').setFontStyle('normal')
       })
   }
 
