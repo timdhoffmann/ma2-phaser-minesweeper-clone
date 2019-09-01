@@ -4,11 +4,17 @@ import { Scene } from 'phaser'
 const SpriteSheetIndex = Object.freeze({
   Hidden: 0,
   Marked: 9,
-  Revealed: 10
+  Revealed: 10,
+  Mine: 11
 })
 
-// FIXME: workaround to get intellisense.
-// var is overwritten in constructor with actual reference.
+// IMPORTANT!:
+// This is a workaround to get intellisense during production.
+// It is only left in the code for demonstration puposes
+// and would be replaced in the final distribution with
+// a member variable.
+//
+// The var is overwritten in the constructor with the actual reference.
 var _scene = new Scene()
 
 // Represents a single cell of the playfield.
@@ -22,11 +28,10 @@ export default class Cell {
 
     // "Private" properties.
 
-    // FIXME: workaround to get intellisense.
-    // this._scene = new Scene() // FIXMEComment for production!
-    // this._scene = scene // Un-Comment for production!
+    // IMPORTANT!:
+    // This is a workaround to get intellisense during production.
+    // See comments at declaration above class.
     //
-    // Alternative intelliSense workaround for development.
     // Intentionally re-assigns correct reference.
     _scene = scene
 
@@ -38,27 +43,55 @@ export default class Cell {
       .setOrigin(0)
       .setInteractive()
       // Tints the cell for a hover effect.
-      .on('pointerover', event => {
+      .on('pointerover', (event) => {
         this._sprite.setTint(0xeeeeee)
       })
-      .on('pointerout', event => {
+      .on('pointerout', (event) => {
         this._sprite.clearTint()
       })
-      // TODO: Change to pointer up, if possible with right mouse?
-      .on('pointerdown', this.onCellClicked, this)
+      .on('pointerdown', (pointer) => {
+        if (!_scene.hasStartedGame) {
+          _scene.startGame(this)
+        }
+
+        // Blocks input for cells that are already revealed.
+        if (this._isRevealed) {
+          return
+        }
+
+        // Right mouse button pressed.
+        if (pointer.rightButtonDown()) {
+          this.handleRightMouseButton()
+          return
+        }
+
+        // Left mouse button pressed.
+        this.handleLeftMouseButton()
+      })
   }
 
-  onCellClicked (pointer, gameObject) {
-    // Right mouse button pressed.
-    if (pointer.rightButtonDown()) {
-      this.handleRightMouseButton()
-      return
-    }
+  // #region Initialization and Destruction Methods
 
-    // Left mouse button pressed.
-
-    this.handleLeftMouseButton()
+  // Initializes the internal state.
+  init () {
+    this.isMine = false
+    this.surroundingMines = 0
+    this._isRevealed = false
+    this._isMarked = false
+    this._sprite
+      .setFrame(SpriteSheetIndex.Hidden)
+      .setInteractive()
+      .clearTint()
   }
+
+  // Destroys the sprite.
+  destroy () {
+    this._sprite.destroy()
+  }
+
+  // #endregion
+
+  // #region Event Methods
 
   // Marks cells as mines with right click.
   handleRightMouseButton () {
@@ -74,13 +107,16 @@ export default class Cell {
   }
 
   handleLeftMouseButton () {
+    // Prevents clicking marked cell.
+    if (this._isMarked) {
+      return
+    }
+
     if (this.isMine) {
       // Cell is a mine.
-      // TODO: replace tinting with correct sprite.
       this._sprite.setTint(0xff0000)
       this._sprite.removeInteractive()
-      // this._sprite.disableInteractive()
-      // this._sprite.setFrame(SpriteSheetIndex.Marked)
+
       // Game over.
       _scene.handleGameOver()
     } else {
@@ -89,6 +125,10 @@ export default class Cell {
       this.reveal()
     }
   }
+
+  // #endregion
+
+  // #region Display Methods.
 
   // Reveals a cell that hasn't been revealed, yet.
   reveal () {
@@ -99,6 +139,8 @@ export default class Cell {
 
     this._isRevealed = true
 
+    _scene.grid.incrementCellsRevealed()
+
     // Cell has surrounding mines.
     if (this.surroundingMines > 0) {
       this._sprite.setFrame(this.surroundingMines)
@@ -107,7 +149,13 @@ export default class Cell {
       this._sprite.setFrame(SpriteSheetIndex.Revealed)
       _scene.grid.autoRevealSurroundingCells(this)
     }
-    // TODO: Set sprite according to state.
-    //
   }
+
+  showIfMine () {
+    if (this.isMine) {
+      this._sprite.setFrame(SpriteSheetIndex.Mine)
+    }
+  }
+
+  // #endregion
 }

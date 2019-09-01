@@ -1,5 +1,5 @@
 import Cell from './cell'
-import { Scene, Math } from 'phaser'
+import { Math } from 'phaser'
 
 // Represents the grid of cells that makes the playfield.
 export default class Grid {
@@ -12,6 +12,7 @@ export default class Grid {
     cellSize,
     totalMines
   ) {
+    // "Private" properties.
     // A reference to the parent phaser scene.
     this._scene = scene
     // The world position of the grid in pixels.
@@ -23,13 +24,45 @@ export default class Grid {
     this._gridHeight = gridHeight
     // Ths size of one cell in pixels.
     this._cellSize = cellSize
+    // The total count of mines to be placed.
+    this._totalMines = totalMines
+    // The amount of cells that have been revealed by the player.
+    this._cellsRevealed = 0
 
     // Gap between cells in pixels.
     this._gap = 1
+
+    // Debugging.
+    // Set to true, if mines should be indicated upon grid creation.
+    this._debugShowMines = false
+
     // A 2d array off cells [gridX][gridY] or [gridWidth][gridHeight].
     this._cells = this.createGrid()
 
-    this.distributeMines(totalMines)
+    // Initializes the grid state.
+    this.init()
+  }
+
+  // #region Getters and Setters
+
+  get totalCells () {
+    return this._gridWidth * this._gridHeight
+  }
+
+  get hasRemainingCells () {
+    return this.totalCells - this._totalMines - this._cellsRevealed > 0
+  }
+
+  // #endregion
+
+  // Increments the number of revealed cells and checks for win condition.
+  incrementCellsRevealed () {
+    this._cellsRevealed++
+
+    // Checks for win condition.
+    if (!this.hasRemainingCells) {
+      this._scene.handleWin()
+    }
   }
 
   // Creats a grid of cells.
@@ -53,37 +86,72 @@ export default class Grid {
     return cells
   }
 
+  // #region Initialization Methods
+
+  init () {
+    this._cellsRevealed = 0
+
+    this.initCells()
+  }
+
+  // Initializes each cell's state.
+  initCells () {
+    // Iterates over all cells.
+    this._cells.forEach((column) => {
+      column.forEach((cell) => {
+        cell.init()
+      })
+    })
+  }
+
+  destroy () {
+    // Destroys all cells' graphics.
+    this._cells.forEach((column) => {
+      column.forEach((cell) => {
+        cell.destroy()
+      })
+    })
+  }
+
   // Distributes mines across an existing cell grid.
-  distributeMines (minesToPlace) {
+  distributeMines (cellToIgnore) {
+    let minesToPlace = this._totalMines
+
     while (minesToPlace > 0) {
       const randomX = Math.RND.between(0, this._gridWidth - 1)
       const randomY = Math.RND.between(0, this._gridHeight - 1)
       const cell = this._cells[randomX][randomY]
 
+      // Skips a cell that already contains a mine.
       if (cell.isMine) {
-        console.log(
-          `cell x: ${randomX}, y: ${randomY} already is mine. skipped.`
-        )
         continue
+      }
+
+      // Skips the calling cell (first cell revealed).
+      if (cellToIgnore != null) {
+        if (randomX === cellToIgnore.gridX && randomY === cellToIgnore.gridY) {
+          continue
+        }
       }
 
       // Only executes if cell isn't a mine already.
       cell.isMine = true
       minesToPlace--
-      console.log(
-        `placed mine at x: ${randomX}, y: ${randomY}. remaining: ${minesToPlace}`
-      )
+    }
+
+    if (this._debugShowMines) {
+      this.showAllMines()
     }
 
     this.calculateAllCellsSurroundingMines()
   }
 
+  // #endregion
+
   // #region Surrounding Mines Methods
 
   // Calculates surrounding mines for all cells.
   calculateAllCellsSurroundingMines () {
-    // TODO: try iterating over all cells with foreach instead. Needs reading gridX and gridY from each cell.
-
     // Iterates over all columns.
     for (let x = 0; x < this._gridWidth; x++) {
       // Iterates over all cells in a column, from top to bottom.
@@ -117,7 +185,6 @@ export default class Grid {
         }
       }
     }
-    // TODO: return calculated value.
     return surroundingMines
   }
 
@@ -127,7 +194,7 @@ export default class Grid {
     // Iterates over all surrounding cells.
     for (let x = -1; x < 2; x++) {
       for (let y = -1; y < 2; y++) {
-        // TODO: needs skipping checking itself?
+        // Skips the calling cell.
         if (x === 0 && y === 0) {
           continue
         }
@@ -147,6 +214,15 @@ export default class Grid {
   }
 
   // #region Helper Methods
+
+  showAllMines () {
+    // Iterates over all cells.
+    this._cells.forEach((column) => {
+      column.forEach((cell) => {
+        cell.showIfMine()
+      })
+    })
+  }
 
   // Gets the cell at the requested location.
   // Returns the cell or null if the request was outside of the grid.
