@@ -54,6 +54,11 @@ export default class Cell {
           _scene.startGame(this)
         }
 
+        // Blocks input for cells that are already revealed.
+        if (this._isRevealed) {
+          return
+        }
+
         // Right mouse button pressed.
         if (pointer.rightButtonDown()) {
           this.handleRightMouseButton()
