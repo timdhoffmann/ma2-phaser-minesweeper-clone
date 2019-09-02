@@ -206,7 +206,7 @@ export default class Grid {
           continue
         }
 
-        if (surroundingCell.surroundingMines === 0) {
+        if (!surroundingCell.isMine) {
           surroundingCell.reveal()
         }
       }
