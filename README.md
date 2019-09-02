@@ -8,7 +8,7 @@ By Tim Hoffmann
 
 ### 1.1.1. Repository
 
-This repository uses Git LFS (large file storage). Make sure to have Git LFS installed and configured when cloning. Otherwise, download the ZIP file directly from Github.
+This repository uses Git LFS (large file storage). Make sure to have Git LFS installed and configured when cloning. Otherwise, binary files will be missing (this also applies to downloading the zipped repository from GitHub).
 
 ### 1.1.2. Phaser 3 Webpack Project Template
 
